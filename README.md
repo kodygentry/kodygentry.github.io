@@ -1,2 +1,0 @@
-# kodygentry.github.io
-Portfolio
