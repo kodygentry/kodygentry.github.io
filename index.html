@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kody Gentry - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <section class="hero">
+        <nav class="nav">
+            <div class="nav-circle">menu</div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="software.html">software_projects</a>
+                <a href="games.html">game_projects</a>
+            </div>
+        </nav>
+        <h1>kody_gentry</h1>
+        <p class="tagline">Building innovative software and immersive games.</p>
+        <canvas id="particles"></canvas>
+        <p>software_dev : game_creator : digital_innovator</p>
+        <div class="social-links">
+            <a href="https://chumstudios.itch.io/" target="_blank">chum_studios</a>
+            <a href="https://github.com/kodygentry" target="_blank">github</a>
+            <a href="https://www.linkedin.com/in/kodygentry/" target="_blank">linkedin</a>
+        </div>
+        <div class="project-highlights">
+            <p><strong>Highlights:</strong> Marvel Rivals Discord Bot, Eternal Burn (Godot), Advent of Code 2023</p>
+        </div>
+        <div class="section-links">
+            <a href="software.html">software_projects</a>
+            <a href="games.html">game_projects</a>
+        </div>
+        <div class="cube-container">
+            <div class="cube">
+                <div class="cube-face front"></div>
+                <div class="cube-face back"></div>
+                <div class="cube-face right"></div>
+                <div class="cube-face left"></div>
+                <div class="cube-face top"></div>
+                <div class="cube-face bottom"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tic-Tac-Toe Demo Section -->
+    <section class="demo-section">
+        <h2>Tic-Tac-Toe AI Demo</h2>
+        <p>Try my unbeatable Tic-Tac-Toe AI, implemented with MINMAX and Alpha-Beta pruning. Play as 'X' against the AI ('O').</p>
+        <div class="ttt-container">
+            <div id="ttt-board" class="ttt-board"></div>
+            <button id="reset-btn" class="btn">Reset Game</button>
+            <p id="status">Click a cell to start!</p>
+        </div>
+    </section>
+
+    <!-- Game of Life Demo Section -->
+    <section class="demo-section">
+        <h2>Conway’s Game of Life Demo</h2>
+        <p>Explore the mesmerizing patterns of Conway’s Game of Life. Click to draw, or use controls to play, reset, or randomize.</p>
+        <div class="gol-container">
+            <canvas id="gol-canvas" width="500" height="500"></canvas>
+            <div class="gol-controls">
+                <button id="play-pause-btn" class="btn">Play</button>
+                <button id="clear-btn" class="btn">Clear</button>
+                <button id="random-btn" class="btn">Randomize</button>
+            </div>
+            <p id="gol-status">Click the grid to draw cells!</p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
