@@ -507,3 +507,69 @@ body {
         font-size: 2rem !important;
     }
 }
+
+/* Demo Dropdown Styles */
+.demo-dropdown {
+    margin: 40px auto;
+    max-width: 800px;
+    border: 2px solid #00e6b8;
+    border-radius: 15px;
+    background: #1a1a1a;
+    overflow: hidden;
+  }
+  .demo-dropdown summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px;
+    background: #252525;
+    border-bottom: 2px solid #00e6b8;
+    transition: transform 0.3s ease;
+  }
+  
+  .demo-dropdown summary:hover {
+    transform: scale(1.05);
+  }
+  
+  .demo-dropdown summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  /* Contact Card Styles */
+  .contact-card {
+    padding: 60px 4vw;
+    background: #252525;
+    text-align: center;
+    border: 2px solid #00e6b8;
+    border-radius: 15px;
+    max-width: 600px;
+    margin: 40px auto;
+  }
+  .contact-card h2 {
+    color: #00e6b8;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  .contact-card p {
+    color: #a0a0a0;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .contact-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  .contact-card input,
+  .contact-card textarea {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #2d2d2d;
+    border-radius: 5px;
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+  .contact-card button {
+    width: auto;
+  }
+  
