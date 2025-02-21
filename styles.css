@@ -523,12 +523,13 @@ body {
     padding: 20px;
     background: #252525;
     border-bottom: 2px solid #00e6b8;
-    transition: transform 0.3s ease;
+    transition: box-shadow 0.3s ease;
   }
   
   .demo-dropdown summary:hover {
-    transform: scale(1.05);
+    box-shadow: 0 0 15px #00e6b8;
   }
+  
   
   .demo-dropdown summary::-webkit-details-marker {
     display: none;
