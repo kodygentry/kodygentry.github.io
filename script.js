@@ -142,6 +142,23 @@ function createBoard() {
             tttBoard.appendChild(cell);
         }
     }
+    
+    // Initialize the game state
+    gameActive = true;
+    currentPlayer = 'X';
+    
+    // Clear board data
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            board[i][j] = '';
+        }
+    }
+    
+    // Update status
+    const statusElement = document.getElementById('status');
+    if (statusElement) {
+        statusElement.textContent = 'Click a cell to start!';
+    }
 }
 
 function handleClick(row, col) {
