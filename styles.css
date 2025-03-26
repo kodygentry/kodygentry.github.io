@@ -156,6 +156,18 @@ h1, h2, h3, .nav-circle, .btn {
     text-shadow: 0 0 8px rgba(0, 230, 184, 0.7);
 }
 
+.social-links img {
+    width: 40px; /* Adjust the size as needed */
+    height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.social-links a:hover img {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+
 .section-links {
     margin-top: 30px;
     position: relative;
