@@ -134,6 +134,23 @@
         animation: wave-gradient 3.5s cubic-bezier(0.4,0.2,0.6,0.8) infinite alternate;
         background-size: 200% 200%;
       }
+      .hero-card-animated-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 1;
+        mix-blend-mode: normal;
+        background-image:
+          url('https://www.transparenttextures.com/patterns/noise.png'),
+          url('https://www.transparenttextures.com/patterns/noise.png'),
+          url('https://www.transparenttextures.com/patterns/noise.png'),
+          url('https://www.transparenttextures.com/patterns/noise.png');
+        background-size: 16px 16px, 8px 8px, 4px 4px, 2px 2px;
+        background-blend-mode: normal, normal, normal, normal;
+      }
       @keyframes wave-gradient {
         0% {
           background-position: 0% 50%;
