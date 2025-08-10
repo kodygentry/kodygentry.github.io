@@ -1,3 +1,4 @@
+  <!-- Stray JS removed: animation code is now in the correct <script> block below -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,6 +15,27 @@
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+      /* Card populate-in animation */
+      @keyframes card-pop-in {
+        0% {
+          opacity: 0;
+          transform: translateY(32px) scale(0.98);
+          filter: blur(6px);
+        }
+        80% {
+          opacity: 1;
+          transform: translateY(-4px) scale(1.01);
+          filter: blur(0px);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+          filter: none;
+        }
+      }
+      .card-pop-in {
+        animation: card-pop-in 0.7s cubic-bezier(0.22,0.68,0.43,1.01) both;
+      }
       /* Reset styles and base typography */
       *, *::before, *::after {
         box-sizing: border-box;
@@ -266,8 +288,13 @@
         background: rgba(15, 23, 42, 0.5);
         padding: 1rem;
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-        transition: transform 0.1s;
+        transition: transform 0.1s, box-shadow 0.2s, background 0.2s, border 0.2s;
         overflow: hidden;
+      }
+      .project-card-highlight {
+        border: 1.5px solid #60a5fa;
+        background: linear-gradient(120deg, rgba(96,165,250,0.10) 0%, rgba(224,231,239,0.07) 100%);
+        box-shadow: 0 0 0 1.5px #60a5fa55, 0 4px 16px rgba(96,165,250,0.07);
       }
       .project-card::before,
       .game-card::before {
@@ -390,6 +417,18 @@
           <strong>Work in progress!</strong>
           <p class="project-meta"><span>Tools:</span> Blender, Game Art</p>
         </div>
+        <div class="card-grid" style="margin-top:1.2rem;">
+          <div class="game-card">
+            <img src="static/assets/img.png" alt="Chum Studios" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#1e293b;" />
+            <h3>Chum Studios</h3>
+            <p>Studio logo and branding.</p>
+          </div>
+          <div class="game-card">
+            <img src="static/assets/seths_logo.png" alt="Fan Art - Seth's Logo" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#1e293b;" />
+            <h3>Fan Art: Seth's Logo</h3>
+            <p>Logo fan art for Seth's channel.</p>
+          </div>
+        </div>
       </section>
     </main>
     <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #64748b;">
@@ -451,9 +490,25 @@
           container.innerHTML = '<p class="text-sm text-slate-400">No projects found.</p>';
           return;
         }
-        repos.forEach((r) => {
+        // Highlighted repos for side and school
+        const highlightSide = ["KimoTune","SimpleAPI","Marvel-Rivals-Discord-Stat-Bot"];
+        const highlightSchool = ["Tic-Tac-Toe-AI","Cardiovascular-Disease-Diagnosis-Expert-System","General-CPP-Programs"];
+        let highlightList = [];
+        if (id === 'side-projects') highlightList = highlightSide;
+        if (id === 'school-projects') highlightList = highlightSchool;
+        // Sort so highlights are first, in the order specified
+        let sorted = repos.slice();
+        if (highlightList.length) {
+          const highlights = highlightList
+            .map(name => sorted.find(r => r.name === name))
+            .filter(Boolean);
+          const rest = sorted.filter(r => !highlightList.includes(r.name));
+          sorted = [...highlights, ...rest];
+        }
+        sorted.forEach((r, i) => {
+          const isHighlight = highlightList.includes(r.name) && i < 3;
           const div = document.createElement('div');
-          div.className = 'project-card';
+          div.className = 'project-card' + (isHighlight ? ' project-card-highlight' : '');
           div.innerHTML = `
             <h3>${r.name}</h3>
             <p>${r.description ? r.description : 'No description provided.'}</p>
@@ -529,6 +584,38 @@
       // Initiate data fetches on page load
       loadGithubRepos();
       loadItchGames();
+    </script>
+    <script>
+      // Animate cards as they enter the viewport
+      function animateCardsOnScroll() {
+        const observer = new window.IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('card-pop-in');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.project-card, .game-card').forEach(card => {
+          observer.observe(card);
+        });
+      }
+      // Re-run after dynamic content loads, but only patch once
+      if (!window._cardPopInPatched) {
+        window._cardPopInPatched = true;
+        const origRenderRepos = window.renderRepos;
+        window.renderRepos = function(id, repos) {
+          origRenderRepos(id, repos);
+          setTimeout(animateCardsOnScroll, 0);
+        };
+        const origLoadItchGames = window.loadItchGames;
+        window.loadItchGames = async function() {
+          await origLoadItchGames();
+          setTimeout(animateCardsOnScroll, 0);
+        };
+      }
+      // Initial call for cards already in DOM
+      window.addEventListener('DOMContentLoaded', animateCardsOnScroll);
     </script>
   </body>
 </html>
