@@ -1,101 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kody Gentry Portfolio</title>
-  <!-- Tailwind CSS CDN for styling -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* Simple background gradient */
-    body {
-      background: linear-gradient(to bottom, #0f172a, #1e293b);
-      min-height: 100vh;
-    }
-  </style>
-</head>
-<body class="text-white">
-  <div class="max-w-3xl mx-auto p-6">
-    <!-- Hero section -->
-    <div class="text-center mt-10">
-      <h1 class="text-5xl font-extrabold tracking-tight">Kody Gentry</h1>
-      <p class="mt-2 text-xl font-medium">Software Dev · Game Dev · 3D Artist</p>
-      <p class="mt-2 text-sm text-gray-300">Founder of Chum Studios</p>
-      <div class="mt-6 flex flex-wrap justify-center gap-4">
-        <a class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full" href="https://github.com/kodygentry" target="_blank">GitHub</a>
-        <a class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-full" href="mailto:kodygentry3737@gmail.com">Email</a>
-      </div>
-    </div>
-    <!-- Repositories section -->
-    <div class="mt-12">
-      <h2 class="text-3xl font-semibold mb-4">Top GitHub Repositories</h2>
-      <div id="repos" class="grid gap-4 sm:grid-cols-2"></div>
-    </div>
-    <!-- Games section -->
-    <div class="mt-12">
-      <h2 class="text-3xl font-semibold mb-4">Games on itch.io</h2>
-      <div id="games" class="grid gap-4 sm:grid-cols-2"></div>
-    </div>
-  </div>
-
-  <script>
-    // Load GitHub repositories and display them
-    async function loadRepos() {
-      try {
-        const resp = await fetch('https://api.github.com/users/kodygentry/repos?per_page=100');
-        const data = await resp.json();
-        const repos = data.filter(r => !r.fork).sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6);
-        const container = document.getElementById('repos');
-        repos.forEach(repo => {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kody Gentry Portfolio</title>
+    <!-- Preload Roboto Mono font for monospace aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Reset styles and base typography */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Roboto Mono', ui-monospace, Menlo, Monaco, Consolas,
+          'Liberation Mono', 'Courier New', monospace;
+        color: #e2e8f0;
+        background: radial-gradient(
+            ellipse at top,
+            rgba(56, 189, 248, 0.25),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at bottom,
+            rgba(59, 130, 246, 0.2),
+            transparent 60%
+          ),
+          #0f172a;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+      /* Dot-dither starfield */
+      body::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+            rgba(255, 255, 255, 0.6) 1px,
+            transparent 1px
+          );
+        background-size: 3px 3px;
+        opacity: 0.08;
+        mix-blend-mode: soft-light;
+        pointer-events: none;
+      }
+      /* Horizon grid (reminiscent of retro CRT floor) */
+      body::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 40vh;
+        perspective: 800px;
+        pointer-events: none;
+      }
+      body::after::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform-origin: bottom;
+        transform: rotateX(60deg);
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.08) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.08) 1px,
+            transparent 1px
+          );
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+      /* Layout container */
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      /* Hero card styling */
+      .hero-card {
+        position: relative;
+        margin: 0 auto 2rem;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+      .hero-card::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: inherit;
+        background: linear-gradient(
+          135deg,
+          rgba(6, 182, 212, 0.4),
+          rgba(79, 70, 229, 0.4),
+          rgba(99, 102, 241, 0.4)
+        );
+        z-index: -1;
+        filter: blur(20px);
+      }
+      .hero-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .hero-icons div {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: grid;
+        place-items: center;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(59, 130, 246, 0.15);
+      }
+      .hero-card h1 {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        font-weight: 800;
+        color: #dbeafe;
+        letter-spacing: -1px;
+        text-align: center;
+      }
+      .hero-card p {
+        text-align: center;
+        margin-top: 0.5rem;
+        color: #cbd5e1;
+      }
+      .hero-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      .hero-links a {
+        padding: 0.5rem 1.25rem;
+        border-radius: 9999px;
+        background: rgba(30, 41, 59, 0.6);
+        color: #e2e8f0;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background 0.2s;
+      }
+      .hero-links a:hover {
+        background: rgba(59, 130, 246, 0.4);
+      }
+      /* Tabs bar */
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-bottom: 2rem;
+        border-radius: 1rem;
+        background: rgba(15, 23, 42, 0.6);
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+      }
+      .tabs button {
+        padding: 0.75rem;
+        color: #bfdbfe;
+        background: transparent;
+        border: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .tabs button.active {
+        background: #ffffff;
+        color: #0f172a;
+        font-weight: 600;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      /* Accordion styling */
+      .accordion {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .accordion details {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .accordion summary {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        cursor: pointer;
+        color: #bfdbfe;
+        font-weight: 500;
+      }
+      .accordion details[open] summary {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .accordion details summary::after {
+        content: '\25be';
+        transition: transform 0.3s;
+      }
+      .accordion details[open] summary::after {
+        transform: rotate(180deg);
+      }
+      /* Grid for cards */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .project-card,
+      .game-card {
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(15, 23, 42, 0.5);
+        padding: 1rem;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+        transition: transform 0.1s;
+      }
+      .project-card:hover,
+      .game-card:hover {
+        transform: translateY(-2px);
+      }
+      .project-card h3,
+      .game-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #dbeafe;
+      }
+      .project-card p,
+      .game-card p {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-bottom: 0.5rem;
+      }
+      .project-meta {
+        font-size: 0.75rem;
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+      .project-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .project-meta a {
+        color: #7dd3fc;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <!-- Hero section -->
+      <section class="hero-card">
+        <div class="hero-icons">
+          <div>
+            <!-- Gamepad icon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 10a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4v-2z" />
+              <path d="M6 9v2m0 0V9m0 2h2m-2 0H4m7-2h.01" />
+              <path d="M14 9h2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4z" />
+              <path d="M18 13h.01" />
+            </svg>
+          </div>
+          <div>
+            <!-- Code icon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <div>
+            <!-- Paintbrush icon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2L2 12l4 4 10-10z" />
+              <path d="M16 8l-1.5 1.5" />
+            </svg>
+          </div>
+        </div>
+        <h1>Kody Gentry</h1>
+        <p>Software Dev · Game Dev · 3D Artist</p>
+        <p>Founder of Chum Studios</p>
+        <div class="hero-links">
+          <a href="https://github.com/kodygentry" target="_blank" rel="noopener">GitHub</a>
+          <a href="mailto:kodygentry3737@gmail.com">Email</a>
+        </div>
+      </section>
+      <!-- Tabs bar -->
+      <nav class="tabs" role="tablist">
+        <button id="tab-software" class="active" role="tab" aria-selected="true">Software</button>
+        <button id="tab-games" role="tab" aria-selected="false">Games</button>
+        <button id="tab-art" role="tab" aria-selected="false">3D / Art</button>
+      </nav>
+      <!-- Tab contents -->
+      <section id="content-software" class="tab-content active" aria-labelledby="tab-software">
+        <div class="accordion">
+          <details>
+            <summary>Side projects</summary>
+            <div class="card-grid" id="side-projects"></div>
+          </details>
+          <details>
+            <summary>School projects</summary>
+            <div class="card-grid" id="school-projects"></div>
+          </details>
+          <details>
+            <summary>Game dev (code repos)</summary>
+            <div class="card-grid" id="game-projects"></div>
+          </details>
+        </div>
+      </section>
+      <section id="content-games" class="tab-content" aria-labelledby="tab-games">
+        <div class="card-grid" id="game-cards"></div>
+      </section>
+      <section id="content-art" class="tab-content" aria-labelledby="tab-art">
+        <div class="game-card">
+          <h3>3D Props & Environments</h3>
+          <p>Assorted low-poly props and moody environment studies.</p>
+          <p class="project-meta"><span>Tools:</span> Blender, Game Art</p>
+        </div>
+      </section>
+    </main>
+    <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #64748b;">
+      © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios &nbsp;|&nbsp;
+      CRT terminal intro · Dot-dither + scanlines · Warp
+    </footer>
+    <script>
+      // Tab switching logic
+      document.querySelectorAll('.tabs button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tabs button').forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          document.querySelectorAll('.tab-content').forEach((c) => c.classList.remove('active'));
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          const contentId = btn.id.replace('tab', 'content');
+          document.getElementById(contentId).classList.add('active');
+        });
+      });
+      // Categorization helpers matching the React code logic
+      const SIDE_OVERRIDE = new Set(['SimpleAPI','Marvel-Rivals-Discord-Stat-Bot','KimoTune','Advent-Of-Code-2023']);
+      const GAME_OVERRIDE = new Set(['DevQuest','godot-dot-shader']);
+      const SCHOOL_HINTS = ['assembly','mips','x86','arm','object oriented','oop','data structures','algorithms','cs','class','assignment','lab','university','college','school','project','semester','spring','fall'];
+      const SCHOOL_LANGS = ['C','C++','Assembly','Makefile'];
+      function categorizeRepo(r) {
+        if (GAME_OVERRIDE.has(r.name)) return 'game';
+        if (SIDE_OVERRIDE.has(r.name)) return 'side';
+        const name = (r.name || '').toLowerCase();
+        const desc = (r.description || '').toLowerCase();
+        const lang = r.language || '';
+        const hasHint = SCHOOL_HINTS.some((k) => name.includes(k) || desc.includes(k));
+        const langHint = SCHOOL_LANGS.includes(lang);
+        return hasHint || langHint ? 'school' : 'side';
+      }
+      async function loadGithubRepos() {
+        try {
+          const res = await fetch('https://api.github.com/users/kodygentry/repos?per_page=100');
+          if (!res.ok) throw new Error('GitHub ' + res.status);
+          const data = await res.json();
+          const filtered = data.filter((r) => !r.fork);
+          const sorted = filtered.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0)).slice(0, 60);
+          const categorized = { side: [], school: [], game: [] };
+          sorted.forEach((r) => {
+            const type = categorizeRepo(r);
+            categorized[type].push(r);
+          });
+          renderRepos('side-projects', categorized.side);
+          renderRepos('school-projects', categorized.school);
+          renderRepos('game-projects', categorized.game);
+        } catch (err) {
+          document.getElementById('side-projects').innerHTML = '<p>Error loading repos: ' + err.message + '</p>';
+        }
+      }
+      function renderRepos(id, repos) {
+        const container = document.getElementById(id);
+        container.innerHTML = '';
+        if (!repos || repos.length === 0) {
+          container.innerHTML = '<p class="text-sm text-slate-400">No projects found.</p>';
+          return;
+        }
+        repos.forEach((r) => {
           const div = document.createElement('div');
-          div.className = 'bg-gray-800 p-4 rounded shadow hover:bg-gray-700';
+          div.className = 'project-card';
           div.innerHTML = `
-            <h3 class="text-xl font-semibold">${repo.name}</h3>
-            <p class="mt-1 text-sm text-gray-300">${repo.description || 'No description'}</p>
-            <div class="mt-2 text-xs text-gray-400">⭐ ${repo.stargazers_count}    Forks ${repo.forks_count}</div>
-            <a class="inline-block mt-3 text-blue-400 hover:underline text-sm" href="${repo.html_url}" target="_blank">View on GitHub</a>
+            <h3>${r.name}</h3>
+            <p>${r.description ? r.description : 'No description provided.'}</p>
+            <div class="project-meta">
+              <span>⭐ ${r.stargazers_count || 0}</span>
+              <span>🍴 ${r.forks_count || 0}</span>
+              <a href="${r.html_url}" target="_blank" rel="noopener">View on GitHub</a>
+            </div>
           `;
           container.appendChild(div);
         });
-      } catch (e) {
-        document.getElementById('repos').innerText = 'Failed to load repositories.';
       }
-    }
-
-    // Load itch.io games using the oembed endpoint
-    const itchGames = [
-      'https://chumstudios.itch.io/midnight-slice-demo',
-      'https://chumstudios.itch.io/eternal-burn'
-    ];
-
-    async function loadGames() {
-      const container = document.getElementById('games');
-      for (const url of itchGames) {
-        try {
-          const res = await fetch(`https://itch.io/oembed?url=${encodeURIComponent(url)}`);
-          if (!res.ok) throw new Error('Failed to fetch');
-          const j = await res.json();
-          const card = document.createElement('div');
-          card.className = 'bg-gray-800 p-4 rounded shadow flex flex-col';
-          card.innerHTML = `
-            <img src="${j.thumbnail_url || ''}" alt="Game cover" class="w-full h-40 object-cover rounded mb-3" />
-            <h3 class="text-xl font-semibold mb-1">${j.title}</h3>
-            <p class="text-sm text-gray-300 mb-3">by ${j.author_name}</p>
-            <a class="mt-auto text-blue-400 hover:underline text-sm" href="${url}" target="_blank">Play on itch.io</a>
-          `;
-          container.appendChild(card);
-        } catch {
-          // fallback card
-          const fallback = document.createElement('div');
-          fallback.className = 'bg-gray-800 p-4 rounded shadow';
-          fallback.innerHTML = `<h3 class="text-xl font-semibold">Game</h3><p class="text-gray-300">Play on itch.io</p><a class="text-blue-400 hover:underline text-sm" href="${url}" target="_blank">Open</a>`;
-          container.appendChild(fallback);
+      async function loadItchGames() {
+        const urls = [
+          'https://chumstudios.itch.io/midnight-slice-demo',
+          'https://chumstudios.itch.io/eternal-burn'
+        ];
+        const container = document.getElementById('game-cards');
+        container.innerHTML = '';
+        for (const url of urls) {
+          try {
+            const res = await fetch('https://itch.io/oembed?url=' + encodeURIComponent(url));
+            if (!res.ok) throw new Error('oEmbed ' + res.status);
+            const data = await res.json();
+            const div = document.createElement('div');
+            div.className = 'game-card';
+            div.innerHTML = `
+              <h3>${data.title || url}</h3>
+              <p>${data.author_name ? 'by ' + data.author_name : ''}</p>
+              ${data.thumbnail_url ? `<img src="${data.thumbnail_url}" alt="${data.title} cover" style="width:100%;height:120px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;" />` : ''}
+              <a href="${url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
+            `;
+            container.appendChild(div);
+          } catch (err) {
+            const div = document.createElement('div');
+            div.className = 'game-card';
+            div.innerHTML = `<h3>${url}</h3><p>Failed to load game info.</p>`;
+            container.appendChild(div);
+          }
         }
       }
-    }
-
-    loadRepos();
-    loadGames();
-  </script>
-</body>
+      // Initiate data fetches on page load
+      loadGithubRepos();
+      loadItchGames();
+    </script>
+  </body>
 </html>
