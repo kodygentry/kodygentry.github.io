@@ -11,6 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       /* Reset styles and base typography */
       *, *::before, *::after {
@@ -98,6 +100,32 @@
         box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
         overflow: hidden;
       }
+      .hero-card-animated-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: linear-gradient(120deg, #38bdf8 0%, #64748b 40%, #e0e7ef 80%, #ffffff 100%);
+        opacity: 0.38;
+        filter: blur(32px) brightness(1.2) saturate(1.1);
+        animation: wave-gradient 3.5s cubic-bezier(0.4,0.2,0.6,0.8) infinite alternate;
+        background-size: 200% 200%;
+      }
+      @keyframes wave-gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        33% {
+          background-position: 100% 30%;
+        }
+        66% {
+          background-position: 50% 100%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
       .hero-card::before {
         content: '';
         position: absolute;
@@ -124,8 +152,10 @@
         display: grid;
         place-items: center;
         border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(10px) saturate(1.2);
+        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
       }
       .hero-card h1 {
         font-size: clamp(2rem, 8vw, 3.5rem);
@@ -148,14 +178,16 @@
       .hero-links a {
         padding: 0.5rem 1.25rem;
         border-radius: 9999px;
-        background: rgba(30, 41, 59, 0.6);
+        background: rgba(255,255,255,0.18);
         color: #e2e8f0;
         text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(10px) saturate(1.2);
+        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
         transition: background 0.2s;
       }
       .hero-links a:hover {
-        background: rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.22);
       }
       /* Tabs bar */
       .tabs {
@@ -163,9 +195,10 @@
         grid-template-columns: repeat(3, 1fr);
         margin-bottom: 2rem;
         border-radius: 1rem;
-        background: rgba(15, 23, 42, 0.6);
+        background: rgba(255,255,255,0.18);
         overflow: hidden;
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(10px) saturate(1.2);
+        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
       }
       .tabs button {
         padding: 0.75rem;
@@ -174,12 +207,18 @@
         border: none;
         font-size: 0.9rem;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.2s, color 0.2s;
+        border-right: 1px solid rgba(255,255,255,0.10);
+        backdrop-filter: none;
+      }
+      .tabs button:last-child {
+        border-right: none;
       }
       .tabs button.active {
-        background: #ffffff;
-        color: #0f172a;
+        background: rgba(59,130,246,0.22);
+        color: #fff;
         font-weight: 600;
+        backdrop-filter: blur(2px);
       }
       .tab-content {
         display: none;
@@ -221,16 +260,38 @@
       }
       .project-card,
       .game-card {
+        position: relative;
         border-radius: 1rem;
         border: 1px solid rgba(255, 255, 255, 0.15);
         background: rgba(15, 23, 42, 0.5);
         padding: 1rem;
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
         transition: transform 0.1s;
+        overflow: hidden;
+      }
+      .project-card::before,
+      .game-card::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: inherit;
+        z-index: 1;
+        opacity: 0;
+        pointer-events: none;
+        background: linear-gradient(120deg, #38bdf8 0%, #64748b 40%, #e0e7ef 80%, #ffffff 100%);
+        filter: blur(8px) brightness(1.05) saturate(1.05);
+        background-size: 200% 200%;
+        transition: opacity 0.25s;
+      }
+      .project-card:hover::before,
+      .game-card:hover::before {
+        opacity: 0.45;
+        animation: wave-gradient 3.5s cubic-bezier(0.4,0.2,0.6,0.8) infinite alternate;
       }
       .project-card:hover,
       .game-card:hover {
         transform: translateY(-2px);
+        z-index: 2;
       }
       .project-card h3,
       .game-card h3 {
@@ -238,12 +299,22 @@
         font-weight: 600;
         margin-bottom: 0.5rem;
         color: #dbeafe;
+        transition: color 0.2s;
       }
       .project-card p,
       .game-card p {
         font-size: 0.8rem;
         color: #94a3b8;
         margin-bottom: 0.5rem;
+        transition: color 0.2s;
+      }
+      .project-card:hover h3,
+      .game-card:hover h3,
+      .project-card:hover p,
+      .game-card:hover p,
+      .project-card:hover .project-meta,
+      .game-card:hover .project-meta {
+        color: #fff !important;
       }
       .project-meta {
         font-size: 0.75rem;
@@ -266,56 +337,16 @@
     <main class="container">
       <!-- Hero section -->
       <section class="hero-card">
+        <div class="hero-card-animated-bg"></div>
         <div class="hero-icons">
           <div>
-            <!-- Gamepad icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M2 10a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4v-2z" />
-              <path d="M6 9v2m0 0V9m0 2h2m-2 0H4m7-2h.01" />
-              <path d="M14 9h2a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4z" />
-              <path d="M18 13h.01" />
-            </svg>
+            <i class="fa-solid fa-gamepad" style="font-size:1.3rem;color:white;"></i>
           </div>
           <div>
-            <!-- Code icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
+            <i class="fa-solid fa-code" style="font-size:1.3rem;color:white;"></i>
           </div>
           <div>
-            <!-- Paintbrush icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 2L2 12l4 4 10-10z" />
-              <path d="M16 8l-1.5 1.5" />
-            </svg>
+            <i class="fa-solid fa-palette" style="font-size:1.3rem;color:white;"></i>
           </div>
         </div>
         <h1>Kody Gentry</h1>
@@ -356,13 +387,13 @@
         <div class="game-card">
           <h3>3D Props & Environments</h3>
           <p>Assorted low-poly props and moody environment studies.</p>
+          <strong>Work in progress!</strong>
           <p class="project-meta"><span>Tools:</span> Blender, Game Art</p>
         </div>
       </section>
     </main>
     <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #64748b;">
-      © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios &nbsp;|&nbsp;
-      CRT terminal intro · Dot-dither + scanlines · Warp
+      © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios
     </footer>
     <script>
       // Tab switching logic
@@ -436,32 +467,63 @@
         });
       }
       async function loadItchGames() {
-        const urls = [
-          'https://chumstudios.itch.io/midnight-slice-demo',
-          'https://chumstudios.itch.io/eternal-burn'
+        // Fallback SVG for controller icon (set before use)
+        if (!window.fallbackControllerSVG) {
+          window.fallbackControllerSVG = `<div style="width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,0.08);border-radius:0.5rem;margin-bottom:0.5rem;">
+            <i class='fa-solid fa-gamepad' style="font-size:3rem;color:#38bdf8;"></i>
+          </div>`;
+        }
+        const games = [
+          {
+            url: 'https://chumstudios.itch.io/midnight-slice-demo',
+            title: 'Midnight Slice Demo',
+            description: 'A retro horror slice-em-up. Survive the night and slice the monsters!'
+          },
+          {
+            url: 'https://chumstudios.itch.io/eternal-burn',
+            title: 'Eternal Burn',
+            description: 'A fast-paced endless runner with a fiery twist.'
+          }
         ];
         const container = document.getElementById('game-cards');
         container.innerHTML = '';
-        for (const url of urls) {
+        for (const game of games) {
           try {
-            const res = await fetch('https://itch.io/oembed?url=' + encodeURIComponent(url));
-            if (!res.ok) throw new Error('oEmbed ' + res.status);
-            const data = await res.json();
+            const res = await fetch('https://itch.io/oembed?url=' + encodeURIComponent(game.url));
+            let data = {};
+            if (res.ok) {
+              data = await res.json();
+            }
             const div = document.createElement('div');
             div.className = 'game-card';
+            let imgHtml = '';
+            if (data.thumbnail_url) {
+              imgHtml = `<img src="${data.thumbnail_url}" alt="${game.title} cover" style="width:100%;height:120px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;" onerror="this.onerror=null;this.outerHTML=window.fallbackControllerSVG;" />`;
+            } else {
+              imgHtml = window.fallbackControllerSVG;
+            }
             div.innerHTML = `
-              <h3>${data.title || url}</h3>
-              <p>${data.author_name ? 'by ' + data.author_name : ''}</p>
-              ${data.thumbnail_url ? `<img src="${data.thumbnail_url}" alt="${data.title} cover" style="width:100%;height:120px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;" />` : ''}
-              <a href="${url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
+              <h3>${game.title}</h3>
+              <p>${game.description}</p>
+              ${imgHtml}
+              <a href="${game.url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
             `;
             container.appendChild(div);
           } catch (err) {
             const div = document.createElement('div');
             div.className = 'game-card';
-            div.innerHTML = `<h3>${url}</h3><p>Failed to load game info.</p>`;
+            div.innerHTML = `
+              <h3>${game.title}</h3>
+              <p>${game.description}</p>
+              ${window.fallbackControllerSVG}
+              <a href="${game.url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
+            `;
             container.appendChild(div);
           }
+        }
+        // Fallback SVG for controller icon
+        if (!window.fallbackControllerSVG) {
+          window.fallbackControllerSVG = `<svg width="100%" height="120" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 0.5rem auto;background:rgba(59,130,246,0.08);border-radius:0.5rem;"><rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/><path d="M7 12h-2m1-1v2"/></svg>`;
         }
       }
       // Initiate data fetches on page load
