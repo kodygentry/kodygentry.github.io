@@ -1,16 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Immediate redirect to Vercel deployment -->
-    <meta http-equiv="refresh" content="0;url=https://kodygentry-github-io.vercel.app/" />
-    <link rel="canonical" href="https://kodygentry-github-io.vercel.app/" />
-    <title>Redirecting...</title>
-    <script>
-      // JavaScript fallback redirect in case meta refresh is blocked
-      window.location.replace("https://kodygentry-github-io.vercel.app/");
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kody Gentry Portfolio</title>
+  <!-- Tailwind CSS CDN for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Simple background gradient */
+    body {
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      min-height: 100vh;
+    }
+  </style>
 </head>
-<body>
-    <p>If you are not redirected automatically, <a href="https://kodygentry-github-io.vercel.app/">click here</a>.</p>
+<body class="text-white">
+  <div class="max-w-3xl mx-auto p-6">
+    <!-- Hero section -->
+    <div class="text-center mt-10">
+      <h1 class="text-5xl font-extrabold tracking-tight">Kody Gentry</h1>
+      <p class="mt-2 text-xl font-medium">Software Dev · Game Dev · 3D Artist</p>
+      <p class="mt-2 text-sm text-gray-300">Founder of Chum Studios</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <a class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full" href="https://github.com/kodygentry" target="_blank">GitHub</a>
+        <a class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-full" href="mailto:kodygentry3737@gmail.com">Email</a>
+      </div>
+    </div>
+    <!-- Repositories section -->
+    <div class="mt-12">
+      <h2 class="text-3xl font-semibold mb-4">Top GitHub Repositories</h2>
+      <div id="repos" class="grid gap-4 sm:grid-cols-2"></div>
+    </div>
+    <!-- Games section -->
+    <div class="mt-12">
+      <h2 class="text-3xl font-semibold mb-4">Games on itch.io</h2>
+      <div id="games" class="grid gap-4 sm:grid-cols-2"></div>
+    </div>
+  </div>
+
+  <script>
+    // Load GitHub repositories and display them
+    async function loadRepos() {
+      try {
+        const resp = await fetch('https://api.github.com/users/kodygentry/repos?per_page=100');
+        const data = await resp.json();
+        const repos = data.filter(r => !r.fork).sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6);
+        const container = document.getElementById('repos');
+        repos.forEach(repo => {
+          const div = document.createElement('div');
+          div.className = 'bg-gray-800 p-4 rounded shadow hover:bg-gray-700';
+          div.innerHTML = `
+            <h3 class="text-xl font-semibold">${repo.name}</h3>
+            <p class="mt-1 text-sm text-gray-300">${repo.description || 'No description'}</p>
+            <div class="mt-2 text-xs text-gray-400">⭐ ${repo.stargazers_count}    Forks ${repo.forks_count}</div>
+            <a class="inline-block mt-3 text-blue-400 hover:underline text-sm" href="${repo.html_url}" target="_blank">View on GitHub</a>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        document.getElementById('repos').innerText = 'Failed to load repositories.';
+      }
+    }
+
+    // Load itch.io games using the oembed endpoint
+    const itchGames = [
+      'https://chumstudios.itch.io/midnight-slice-demo',
+      'https://chumstudios.itch.io/eternal-burn'
+    ];
+
+    async function loadGames() {
+      const container = document.getElementById('games');
+      for (const url of itchGames) {
+        try {
+          const res = await fetch(`https://itch.io/oembed?url=${encodeURIComponent(url)}`);
+          if (!res.ok) throw new Error('Failed to fetch');
+          const j = await res.json();
+          const card = document.createElement('div');
+          card.className = 'bg-gray-800 p-4 rounded shadow flex flex-col';
+          card.innerHTML = `
+            <img src="${j.thumbnail_url || ''}" alt="Game cover" class="w-full h-40 object-cover rounded mb-3" />
+            <h3 class="text-xl font-semibold mb-1">${j.title}</h3>
+            <p class="text-sm text-gray-300 mb-3">by ${j.author_name}</p>
+            <a class="mt-auto text-blue-400 hover:underline text-sm" href="${url}" target="_blank">Play on itch.io</a>
+          `;
+          container.appendChild(card);
+        } catch {
+          // fallback card
+          const fallback = document.createElement('div');
+          fallback.className = 'bg-gray-800 p-4 rounded shadow';
+          fallback.innerHTML = `<h3 class="text-xl font-semibold">Game</h3><p class="text-gray-300">Play on itch.io</p><a class="text-blue-400 hover:underline text-sm" href="${url}" target="_blank">Open</a>`;
+          container.appendChild(fallback);
+        }
+      }
+    }
+
+    loadRepos();
+    loadGames();
+  </script>
 </body>
 </html>
