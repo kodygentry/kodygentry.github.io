@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kody’s Screen‑Offset Day</title>
+  <!-- Lottie for playful animations -->
+  <script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"></script>
+  <style>
+    :root{
+      --bg:#070a16; --panel:#0d1230; --panel-2:#0a0f27; --card:#11183d; --muted:#8aa0ce; --text:#eaf1ff; --accent:#77b6ff; --accent-2:#97f3c6; --warn:#ffd27a; --danger:#ff7a8a;
+      --glow: 0 0 20px rgba(119,182,255,.35), 0 0 40px rgba(151,243,198,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% -10%, #1a2250 0%, transparent 60%),
+        radial-gradient(1200px 800px at 110% 0%, #102041 0%, transparent 60%),
+        linear-gradient(160deg,#060a1a,#0b1030 40%,#070a16 100%);
+    }
+    .wrap{max-width:1200px;margin:0 auto; padding:24px;}
+    header{
+      display:flex; gap:16px; align-items:center; justify-content:space-between; padding:16px; border-radius:22px; background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08); box-shadow:var(--glow);
+    }
+    .left{display:flex; gap:16px; align-items:center}
+    .avatar{width:88px;height:88px;border-radius:50%;background:var(--panel);display:grid;place-items:center;border:1px solid rgba(255,255,255,.10); box-shadow:var(--glow)}
+    .avatar svg{width:68px;height:68px}
+    .clock{font-size:clamp(24px,3.5vw,36px); font-weight:800; letter-spacing:.5px}
+    .sub{color:var(--muted); font-size:13px}
+    .quote{margin-top:8px; color:var(--accent-2); font-style:italic; font-size:14px}
+
+    .grid{display:grid;grid-template-columns: 1.3fr 1fr; gap:18px; margin-top:18px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--card); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:16px; box-shadow:var(--glow); position:relative; overflow:hidden}
+    .title{font-weight:800; letter-spacing:.4px; margin-bottom:10px}
+    .muted{color:var(--muted)}
+
+    .mode{display:grid; gap:10px; align-items:start}
+    .mode-top{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .mode-name{font-size:22px; font-weight:900}
+    .mode-badges{display:flex; gap:8px; flex-wrap:wrap}
+    .badge{padding:4px 10px; border-radius:999px; font-size:12px; background:#101735; border:1px solid rgba(255,255,255,.10)}
+    .progress{height:12px; border-radius:10px; background:linear-gradient(180deg, #0b0f1c, #0a0d18); border:1px solid rgba(255,255,255,.10); overflow:hidden}
+    .bar{height:100%; width:0; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .25s ease}
+
+    .animbox{display:grid; place-items:center; padding:6px; background:rgba(255,255,255,.02); border-radius:16px; border:1px solid rgba(255,255,255,.06)}
+    dotlottie-wc{width:320px; height:320px}
+
+    .controls{display:flex; gap:10px; flex-wrap:wrap}
+    button, .toggle, select{
+      appearance:none; border:none; padding:10px 14px; background:linear-gradient(180deg, #1c2448, #18203f);
+      border-radius:12px; color:var(--text); border:1px solid rgba(255,255,255,.12); cursor:pointer; font-weight:700
+    }
+    button:hover{filter:brightness(1.06)}
+    .toggle{display:flex; align-items:center; gap:8px}
+
+    .schedule{display:grid; gap:10px}
+    .event{display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius:12px; background:var(--panel); border:1px solid rgba(255,255,255,.08)}
+    .event-time{min-width:80px; font-weight:800}
+    .event-dot{width:9px;height:9px;border-radius:50%; background:var(--accent)}
+
+    .footer{margin-top:18px; color:var(--muted); font-size:12px}
+
+    .pill{padding:4px 10px; border-radius:999px; background:#0f1632; border:1px solid rgba(255,255,255,.10)}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+
+    .eye{display:flex; gap:10px; align-items:center}
+
+    /* Modal */
+    .modal-backdrop{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.6); z-index:10}
+    .modal{width:min(680px, 92vw); background:var(--panel); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:14px}
+    .modal h3{margin:4px 0 10px}
+    .modal form{display:grid; gap:10px}
+    .modal label{font-size:14px; color:var(--muted)}
+    .modal textarea, .modal input[type="text"], .modal input[type="range"]{width:100%; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.16); background:#0e1430; color:var(--text)}
+    .scale{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:4px}
+
+    .pill-green{background:rgba(157,242,194,.15); border:1px solid rgba(157,242,194,.5)}
+    .pill-warn{background:rgba(255,204,106,.15); border:1px solid rgba(255,204,106,.55)}
+    .pill-danger{background:rgba(255,122,138,.18); border:1px solid rgba(255,122,138,.55)}
+
+    .small{font-size:12px}
+    .glow{box-shadow:var(--glow)}
+    .tests{margin-top:12px; font-size:12px; color:var(--muted)}
+    .tests .pass{color:#9df2c2}
+    .tests .fail{color:#ff7a8a}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="left">
+        
+        <div>
+          <div class="clock" id="clock">--:--:--</div>
+          <div class="sub" id="tz">America/Chicago</div>
+          <div class="quote" id="quote">“Tiny habits, big compounding wins.”</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="row">
+          <span class="pill" id="nextEventPill">Next: —</span>
+          <label class="toggle"><input type="checkbox" id="muteToggle"/> Mute sounds</label>
+          <button id="demoStart">Start Workday Demo</button>
+          <button id="demoStop">Stop Demo</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="mode">
+          <div class="mode-top">
+            <div>
+              <div class="title">Live Mode</div>
+              <div class="mode-name" id="modeName">—</div>
+              <div class="mode-badges">
+                <span class="badge" id="modeWindow">—</span>
+                <span class="badge" id="modeEnds">Ends in —</span>
+              </div>
+            </div>
+            <div class="animbox">
+              <dotlottie-wc id="modeAnim" autoplay loop></dotlottie-wc>
+            </div>
+          </div>
+
+          <div class="progress"><div class="bar" id="modeBar"></div></div>
+
+          <div class="eye">
+            <span class="pill pill-warn">20‑20‑20 Check</span>
+            <span class="small" id="eyeCountdown">Next in —</span>
+            <button id="eyeDoneBtn" title="Log an eye break">I looked away 👀</button>
+          </div>
+
+          <div class="controls">
+            <button id="forceSit">Start Sit (40)</button>
+            <button id="forceStand">Start Stand (20)</button>
+            <button id="resetCycle">Reset 9–5 Cycle</button>
+            <button id="testSound">Test Sound</button>
+          </div>
+
+          <div class="tests" id="testOutput"></div>
+          <div class="controls" style="margin-top:8px">
+            <button id="runTests">Run Self‑Tests</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="title">Today’s Schedule</div>
+        <div class="schedule" id="scheduleList"></div>
+        <div class="footer">Events adapt to your local time (America/Chicago). All data is stored locally in your browser.</div>
+      </aside>
+    </div>
+
+    <section class="card" style="margin-top:16px">
+      <div class="title">Daily Review Log</div>
+      <div id="logPreview" class="muted small">No entries yet.</div>
+    </section>
+
+    <!-- Review Modal (1 per day per name) -->
+    <div class="modal-backdrop" id="reviewBackdrop" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+      <div class="modal">
+        <h3 id="reviewTitle">Review the day?</h3>
+        <p class="muted" id="reviewDateText">—</p>
+        <form id="reviewForm">
+          <label>Name<input type="text" name="name" required placeholder="Kody" value="Kody"/></label>
+          <label>Focus (1–5)
+            <input type="range" min="1" max="5" step="1" name="focus" value="3"/>
+            <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          </label>
+          <label>Body (1–5)
+            <input type="range" min="1" max="5" step="1" name="body" value="3"/>
+            <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          </label>
+          <label>Mood (1–5)
+            <input type="range" min="1" max="5" step="1" name="mood" value="3"/>
+            <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          </label>
+          <div class="row" style="justify-content:space-between; margin-top:6px">
+            <div class="small muted">Only one review per day per name. Submitting again overwrites today’s entry.</div>
+            <div>
+              <button type="button" id="cancelReview">Cancel</button>
+              <button type="submit">Save Review</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ====== CONFIG ======
+  const TZ = 'America/Chicago'; // San Antonio
+  const QUOTES = [
+    '“Tiny habits, big compounding wins.”',
+    '“Motion is lotion. Keep joints moving.”',
+    '“Look far often; your eyes will thank you.”',
+    '“Stand tall, soft jaw, easy breath.”',
+    '“Consistency beats intensity.”'
+  ];
+  // Lottie animations
+  const LOTTIES = {
+    sit: 'https://lottie.host/e169faa1-5eaf-4ae1-a5d4-58f607d8c810/vPGajVB7JJ.lottie',
+    stand: 'https://lottie.host/483f3033-ad70-4757-b41b-26f65e2b4eec/eu5ozd9oML.lottie',
+    eye: 'https://lottie.host/bb9e8bcf-e4a9-426f-8eb8-20be46b5232b/O9KMUScd8q.lottie',
+    break: 'https://lottie.host/d4ccc934-abd2-42ac-a241-70a139271dbf/Q7xxgg8FY7.lottie'
+  };
+
+  // Base daily events.
+  const EVENTS = [
+    { time: '05:00', title: 'Good morning Kody!', desc: 'A fresh day. Hydrate + a minute of light.' },
+    { time: '08:30', title: 'Standup at 8:45', desc: 'Coffee ready? Quick chest opener + neck tilt.' },
+    { time: '09:00', title: 'Sit/Stand/Eye Cycle begins', desc: 'Start in SIT: 40m. Stand: 20m. Eye: every 20m.' },
+    { time: '11:45', title: 'Lunch check', desc: 'Get sun, quick walk, bands/bodyweight, music reset.' },
+    { time: '13:00', title: 'Afternoon cycle', desc: 'Resume SIT/STAND/EYE cadence.' },
+    { time: '16:45', title: 'Logout + Reflect', desc: 'Wrap tasks. Review prompt pops up.' },
+  ];
+
+  // Workblock cycle (9:00–17:00)
+  const CYCLE = {
+    start: '09:00', end: '17:00',
+    sitMin: 40, standMin: 20, eyeEveryMin: 20
+  };
+
+  // Demo mode: accelerate time (e.g., 60x)
+  const DEMO_SPEED = 60; // 1s = 1 minute
+
+  // Sounds via WebAudio (no files needed)
+  const SOUND_PRESETS = {
+    sit: { type:'sine', freq: 520, dur: 0.25 },
+    stand: { type:'triangle', freq: 660, dur: 0.35 },
+    eye: { type:'square', freq: 900, dur: 0.18 },
+    event: { type:'sawtooth', freq: 440, dur: 0.22 }
+  };
+
+  // ====== UTIL ======
+  const fmt = (date) => new Intl.DateTimeFormat(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit', timeZone:TZ}).format(date);
+  const fmtHM = (date) => new Intl.DateTimeFormat(undefined,{hour:'2-digit',minute:'2-digit', timeZone:TZ}).format(date);
+  const toTodayAt = (hhmm) => { // hh:mm -> Date today in TZ
+    const [h,m] = hhmm.split(':').map(Number);
+    const now = new Date();
+    const locale = new Date(now.toLocaleString('en-US',{timeZone:TZ}));
+    locale.setHours(h, m, 0, 0);
+    const delta = locale.getTime() - new Date(now.toLocaleString('en-US')).getTime();
+    return new Date(now.getTime() + delta);
+  };
+  const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+  const sameLocalDay = (a,b)=>{
+    const da = new Date(a.toLocaleString('en-US',{timeZone:TZ}));
+    const db = new Date(b.toLocaleString('en-US',{timeZone:TZ}));
+    return da.getFullYear()==db.getFullYear() && da.getMonth()==db.getMonth() && da.getDate()==db.getDate();
+  };
+
+  // ====== STATE ======
+  let audioCtx = null; let muted = false;
+  let mode = 'idle'; // 'sit' | 'stand' | 'idle'
+  let modeStartedAt = null; // Date
+  let modeEndsAt = null; // Date
+  let eyeNextAt = null; // Date
+  let reviewScheduledForToday = false;
+  let eyeBreakUntil = null; // end time for 1‑minute eye break
+
+  // Demo time state
+  let demo = false; let simNow = null;
+
+  // ====== DOM ======
+  const clockEl = document.getElementById('clock');
+  const tzEl = document.getElementById('tz');
+  const quoteEl = document.getElementById('quote');
+  const nextEventPill = document.getElementById('nextEventPill');
+  const modeNameEl = document.getElementById('modeName');
+  const modeWindowEl = document.getElementById('modeWindow');
+  const modeEndsEl = document.getElementById('modeEnds');
+  const modeBarEl = document.getElementById('modeBar');
+  const eyeCountdownEl = document.getElementById('eyeCountdown');
+  const eyeDoneBtn = document.getElementById('eyeDoneBtn');
+  const muteToggle = document.getElementById('muteToggle');
+  const scheduleList = document.getElementById('scheduleList');
+  const testSoundBtn = document.getElementById('testSound');
+  const forceSitBtn = document.getElementById('forceSit');
+  const forceStandBtn = document.getElementById('forceStand');
+  const resetCycleBtn = document.getElementById('resetCycle');
+  const logPreview = document.getElementById('logPreview');
+  const modeAnim = document.getElementById('modeAnim');
+  const demoStart = document.getElementById('demoStart');
+  const demoStop = document.getElementById('demoStop');
+
+  const reviewBackdrop = document.getElementById('reviewBackdrop');
+  const reviewDateText = document.getElementById('reviewDateText');
+  const cancelReview = document.getElementById('cancelReview');
+  const reviewForm = document.getElementById('reviewForm');
+
+  const testOutput = document.getElementById('testOutput');
+  const runTestsBtn = document.getElementById('runTests');
+
+  tzEl.textContent = TZ;
+  quoteEl.textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+
+  // Populate schedule list
+  function renderSchedule(){
+    scheduleList.innerHTML = '';
+    EVENTS.forEach(evt=>{
+      const row = document.createElement('div'); row.className='event';
+      row.innerHTML = `
+        <span class="event-time">${evt.time}</span>
+        <span class="event-dot"></span>
+        <div>
+          <div><strong>${evt.title}</strong></div>
+          <div class="muted small">${evt.desc||''}</div>
+        </div>`;
+      scheduleList.appendChild(row);
+    });
+  }
+
+  // WebAudio simple beep
+  function play(preset){
+    if(muted) return; if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = preset.type; o.frequency.value = preset.freq; g.gain.value = 0.001;
+    o.connect(g); g.connect(audioCtx.destination);
+    const now = audioCtx.currentTime; g.gain.exponentialRampToValueAtTime(0.2, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + preset.dur);
+    o.start(); o.stop(now + preset.dur + 0.02);
+  }
+
+  // Animations
+  function setAnim(kind){
+    const src = LOTTIES[kind] || LOTTIES.sit;
+    if(modeAnim?.setAttribute){ modeAnim.setAttribute('src', src); }
+  }
+
+  // Mode control
+  function startMode(newMode, minutes){
+    mode = newMode; modeStartedAt = getNow();
+    modeEndsAt = new Date(modeStartedAt.getTime() + minutes*60*1000);
+    modeNameEl.textContent = (mode==='sit'?'SIT mode': mode==='stand'?'STAND mode':'Idle');
+    modeWindowEl.textContent = `${fmtHM(modeStartedAt)} → ${fmtHM(modeEndsAt)}`;
+    setAnim(mode==='sit'?'sit':'stand');
+    play(mode==='sit'?SOUND_PRESETS.sit:SOUND_PRESETS.stand);
+  }
+
+  function startSit(){ startMode('sit', CYCLE.sitMin); }
+  function startStand(){ startMode('stand', CYCLE.standMin); }
+
+  function resetEye(){
+    const now = getNow();
+    eyeNextAt = new Date(now.getTime() + CYCLE.eyeEveryMin*60*1000);
+  }
+
+  // Determine next event
+  function computeNextEvent(now){
+    const nowT = now.getTime();
+    const todays = EVENTS.map(e=>({ ...e, at: toTodayAt(e.time) }));
+    const future = todays.filter(e=>e.at.getTime()>nowT).sort((a,b)=>a.at-b.at);
+    return future[0]||null;
+  }
+
+  // At exact event times, trigger tips/sounds and special actions
+  function eventTick(now){
+    // use ±500ms window for demo speed
+    const matches = EVENTS.filter(e=>{ const at = toTodayAt(e.time); return Math.abs(at - now) < 500; });
+    if(matches.length){
+      play(SOUND_PRESETS.event);
+      const first = matches[0].time;
+      if(first==='09:00'){ startSit(); resetEye(); }
+      if(first==='11:45'){ setAnim('break'); setTimeout(()=>setAnim(mode==='sit'?'sit':'stand'), 60000); }
+      if(first==='13:00'){ startSit(); resetEye(); }
+      if(first==='16:45'){ queueReviewModal(now); setAnim('break'); setTimeout(()=>setAnim('sit'), 45000); }
+    }
+  }
+
+  function insideCycle(now){
+    const s = toTodayAt(CYCLE.start), e = toTodayAt(CYCLE.end);
+    return now>=s && now<e;
+  }
+
+  function autoCycle(now){
+    if(!insideCycle(now)) return;
+    if(!modeStartedAt || !modeEndsAt){ startSit(); resetEye(); return; }
+    if(now >= modeEndsAt){
+      if(mode==='sit') startStand(); else startSit();
+    }
+  }
+
+  function updateProgress(now){
+    if(!modeStartedAt || !modeEndsAt){ modeBarEl.style.width='0%'; modeEndsEl.textContent='Ends in —'; return; }
+    const total = modeEndsAt - modeStartedAt; const spent = now - modeStartedAt; const pct = clamp(spent/total,0,1);
+    modeBarEl.style.width = (pct*100).toFixed(1)+'%';
+    const remainingMs = modeEndsAt - now; const mm = Math.floor(remainingMs/60000); const ss = Math.floor((remainingMs%60000)/1000);
+    modeEndsEl.textContent = `Ends in ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+  }
+
+  function updateEye(now){
+    if(!eyeNextAt) { eyeCountdownEl.textContent = 'Next in —'; return; }
+
+    // If currently in a 1‑minute break window, show countdown and keep eye animation
+    if(eyeBreakUntil && now < eyeBreakUntil){
+      const ms = eyeBreakUntil - now; const mm = Math.floor(ms/60000); const ss = Math.floor((ms%60000)/1000);
+      eyeCountdownEl.textContent = `Break ends in ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+      setAnim('eye');
+      return;
+    }
+
+    // If the 1‑minute break window just ended, return to current mode and schedule next eye
+    if(eyeBreakUntil && now >= eyeBreakUntil){
+      eyeBreakUntil = null; setAnim(mode==='sit'?'sit':'stand'); resetEye();
+      const ms = eyeNextAt - now; const mm = Math.floor(ms/60000); const ss = Math.floor((ms%60000)/1000);
+      eyeCountdownEl.textContent = `Next in ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+      return;
+    }
+
+    // Not in a break; count down to next reminder
+    const msToNext = eyeNextAt - now;
+    if(msToNext <= 0){
+      // Start 1‑minute eye break now
+      play(SOUND_PRESETS.eye);
+      eyeBreakUntil = new Date(now.getTime() + 60*1000); // 1 minute in simulated time
+      setAnim('eye');
+      eyeCountdownEl.textContent = 'Break ends in 01:00';
+      return;
+    }
+    const mm = Math.floor(msToNext/60000); const ss = Math.floor((msToNext%60000)/1000);
+    eyeCountdownEl.textContent = `Next in ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+  }
+
+  // ====== REVIEW STORAGE (1 per day per name) ======
+  function readLog(){
+    try{ return JSON.parse(localStorage.getItem('kody_screen_offset_log')||'[]'); }catch{ return []; }
+  }
+  function writeLog(arr){ localStorage.setItem('kody_screen_offset_log', JSON.stringify(arr)); renderLogPreview(); }
+  function hasEntryForToday(name){
+    const arr = readLog(); const today = getNow();
+    return arr.find(e => e.name===name && sameLocalDay(new Date(e.date), today));
+  }
+  function upsertTodayEntry(entry){
+    const arr = readLog(); const today = getNow();
+    let found = false;
+    const out = arr.map(e=>{
+      if(e.name===entry.name && sameLocalDay(new Date(e.date), today)) { found=true; return {...entry}; }
+      return e;
+    });
+    if(!found) out.push(entry);
+    writeLog(out);
+  }
+  function renderLogPreview(){
+    const arr = readLog();
+    if(!arr.length){ logPreview.textContent='No entries yet.'; return; }
+    const recent = arr.slice(-5).reverse();
+    logPreview.innerHTML = recent.map(it=>{
+      const when = new Date(it.date).toLocaleString([], { timeZone:TZ, dateStyle:'medium', timeStyle:'short' });
+      return `<div class="event" style="margin:6px 0"><div class="event-time">${when.split(',')[0]}</div><div><div><strong>${it.name||'—'}</strong> <span class="muted small">(${when.split(',').slice(1).join(',').trim()})</span></div><div class="small">Focus: ${it.focus}/5 • Body: ${it.body}/5 • Mood: ${it.mood}/5</div></div></div>`;
+    }).join('');
+  }
+
+  // ====== DEMO CLOCK ======
+  function getNow(){ return demo ? simNow : new Date(); }
+  function tickClock(){
+    // advance simulated time if demo
+    if(demo){ simNow = new Date(simNow.getTime() + DEMO_SPEED*1000); }
+    const now = getNow();
+    clockEl.textContent = new Intl.DateTimeFormat(undefined,{ timeZone:TZ, hour:'2-digit', minute:'2-digit', second:'2-digit'}).format(now);
+
+    const next = computeNextEvent(now);
+    if(next){
+      const mins = Math.max(0, Math.round((toTodayAt(next.time)-now)/60000));
+      nextEventPill.textContent = `Next: ${next.title} at ${next.time} (in ${mins}m)`;
+    } else { nextEventPill.textContent = 'No remaining events'; }
+
+    eventTick(now);
+    autoCycle(now);
+    updateProgress(now);
+    updateEye(now);
+    updateAmbientAnim(now);
+  }
+
+  // Show break animation during lunch or after-hours unless overridden
+  function updateAmbientAnim(now){
+    // Don't override during eye-break animation
+    if(eyeBreakUntil && now < eyeBreakUntil) return;
+    const local = new Date(now.toLocaleString('en-US',{timeZone:TZ}));
+    const afterHours = local.getHours() >= 17 || local.getHours() < 9; // outside 9–17
+    const lunchStart = toTodayAt('11:45');
+    const lunchEnd = toTodayAt('13:00');
+    const duringLunch = now >= lunchStart && now < lunchEnd;
+    if(afterHours || duringLunch){ setAnim('break'); }
+    else { setAnim(mode==='sit'?'sit': mode==='stand'?'stand':'sit'); }
+  }
+
+  // ====== INIT ======
+  renderSchedule(); renderLogPreview(); setAnim('sit');
+
+  // Main loop
+  setInterval(tickClock, 1000);
+
+  // ====== UI Hooks ======
+  muteToggle.addEventListener('change', e=>{ muted = !!e.target.checked; });
+  testSoundBtn.addEventListener('click', ()=> play(SOUND_PRESETS.event));
+  forceSitBtn.addEventListener('click', ()=>{ startSit(); resetEye(); });
+  forceStandBtn.addEventListener('click', ()=>{ startStand(); resetEye(); });
+  resetCycleBtn.addEventListener('click', ()=>{ modeStartedAt = modeEndsAt = null; startSit(); resetEye(); });
+  eyeDoneBtn.addEventListener('click', ()=>{
+    // If during break, end it early; otherwise just reschedule next eye
+    const now = getNow();
+    if(eyeBreakUntil && now < eyeBreakUntil){ eyeBreakUntil = null; setAnim(mode==='sit'?'sit':'stand'); }
+    resetEye();
+  });
+
+  demoStart.addEventListener('click', ()=>{
+    demo = true; const nine = toTodayAt(CYCLE.start); simNow = new Date(nine.getTime());
+    reviewScheduledForToday = false; // allow review at demo end time too
+    startSit(); resetEye();
+  });
+  demoStop.addEventListener('click', ()=>{ demo = false; simNow = null; });
+
+  // (FIX) Use the single declared reviewBackdrop below; do not redeclare.
+  cancelReview.addEventListener('click', ()=> reviewBackdrop.style.display='none');
+  function openReview(now){
+    reviewDateText.textContent = new Date(now.toLocaleString('en-US',{timeZone:TZ})).toDateString();
+    reviewBackdrop.style.display='grid';
+  }
+  function queueReviewModal(now){
+    // Only allow review prompts at or after 4:00 PM local time
+    const localNow = new Date(now.toLocaleString('en-US',{timeZone:TZ}));
+    if(localNow.getHours() < 16) return;
+    if(reviewScheduledForToday) return;
+    reviewScheduledForToday = true; openReview(now);
+  }
+
+  reviewForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(reviewForm);
+    const name = (fd.get('name')||'').toString().trim();
+    if(!name) return;
+    const entry = {
+      date: getNow().toISOString(),
+      name,
+      focus: Number(fd.get('focus')||3),
+      body: Number(fd.get('body')||3),
+      mood: Number(fd.get('mood')||3)
+    };
+    // enforce 1 per day per name: upsert (overwrite if exists today)
+    upsertTodayEntry(entry);
+    reviewBackdrop.style.display='none'; reviewForm.reset();
+  });
+
+  // Prompt audio
+  window.addEventListener('click', ()=>{ if(!audioCtx && !muted){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch{} } }, { once:true });
+
+  // If page opens between 16:45 and 23:59, offer review immediately (unless already submitted today for default name "Kody")
+  (function(){
+    const now = new Date(); const r = toTodayAt('16:00'); const eod = toTodayAt('23:59');
+    if(now>=r && now<eod){ queueReviewModal(now); }
+  })();
+
+  // ====== SELF-TESTS ======
+  async function runSelfTests(){
+    const out=[]; const log=(ok,msg)=>out.push(`<div class="${ok?'pass':'fail'}">${ok?'✔':'✖'} ${msg}</div>`);
+    // Test 1: single review modal element exists
+    log(document.querySelectorAll('#reviewBackdrop').length===1,'Review modal element exists exactly once');
+
+    // Test 2: required DOM hooks exist
+    const ids=['clock','modeAnim','reviewForm','cancelReview','eyeCountdown','modeBar'];
+    log(ids.every(id=>document.getElementById(id)),'Core DOM elements present');
+
+    // Test 3: demo clock advances ~DEMO_SPEED minutes per second
+    const wasDemo = demo; const prevSim = simNow; demo = true; simNow = toTodayAt(CYCLE.start);
+    const before = +simNow; await new Promise(r=>setTimeout(r,1100)); // ~1.1s
+    const after = +simNow; const advanced = after - before; demo = wasDemo; if(!wasDemo) simNow = prevSim;
+    log(advanced >= (DEMO_SPEED*1000*0.9) && advanced <= (DEMO_SPEED*1000*1.2), 'Demo time advances at expected speed');
+
+    // Test 4: eye reminder triggers animation
+    const oldSrc = modeAnim.getAttribute('src');
+    eyeNextAt = new Date(getNow().getTime() - 1000); updateEye(getNow());
+    const eyeTriggered = modeAnim.getAttribute('src')===LOTTIES.eye; log(eyeTriggered,'Eye reminder switches to eye animation');
+    if(oldSrc) modeAnim.setAttribute('src', oldSrc);
+
+    // Test 5: review uniqueness (upsert same name/day)
+    const name='TestUser'; const pre = readLog();
+    const baseLen = pre.length;
+    upsertTodayEntry({date:new Date().toISOString(), name, focus:3, body:3, mood:3});
+    upsertTodayEntry({date:new Date().toISOString(), name, focus:5, body:4, mood:2});
+    const post = readLog();
+    const sameDayCount = post.filter(e=>e.name===name && sameLocalDay(new Date(e.date), new Date())).length;
+    log(sameDayCount===1 && post.length>=baseLen,'Review upsert keeps one entry per day per name');
+
+    testOutput.innerHTML = `<div><strong>Self‑Tests</strong></div>${out.join('')}`;
+    console.group('Self‑Tests'); out.forEach(x=>console.log(x.replace(/<[^>]+>/g,''))); console.groupEnd();
+  }
+  runTestsBtn.addEventListener('click', runSelfTests);
+
+  </script>
+</body>
+</html>

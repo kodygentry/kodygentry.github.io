@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cognitive Ability Screening</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --card-inner: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    main.shell {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 22px;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      padding: 18px 18px 14px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .shell-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #bae6fd, transparent 60%), #38bdf8;
+    }
+
+    .brand-text h1 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .pill {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .pill.timer span { background: #f97373; }
+
+    .timer {
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .timer-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .bar-outer {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+    }
+
+    .bar-inner {
+      height: 100%;
+      background: var(--accent);
+      transform-origin: left center;
+      transform: scaleX(1);
+      transition: transform 0.2s linear;
+    }
+
+    .stage {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .shell-header { flex-direction: column; align-items: flex-start; }
+      .stage { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .q-header {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .q-text h2 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .q-text p {
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    .options {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .option {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #020617;
+    }
+
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .opt-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .opt-label { color: var(--text); }
+
+    .option.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .side {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px 9px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .side-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .side-bar {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .side-bar-inner {
+      height: 100%;
+      background: var(--accent);
+      transform-origin: left center;
+      transform: scaleX(0.05);
+      transition: transform 0.2s ease-out;
+    }
+
+    .dots { display: flex; gap: 4px; flex-wrap: wrap; }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .dot.active { border-color: var(--accent); color: var(--text); }
+    .dot.done { border-color: #22c55e; color: #bbf7d0; }
+
+    footer.nav {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .btn-row { display: flex; gap: 8px; }
+
+    button.btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      font-size: 10px;
+      padding: 6px 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+    }
+
+    button.btn.primary {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    button.btn:disabled { opacity: 0.4; cursor: default; }
+
+    .hidden { display: none !important; }
+
+    .results {
+      text-align: center;
+      padding: 10px 6px;
+    }
+
+    .score-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .score-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    .score-meta { font-size: 12px; margin-bottom: 2px; }
+    .score-tagline { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+
+    .badge-row { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
+    .badge {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .badge.main { border-color: var(--accent); color: var(--text); }
+  </style>
+</head>
+<body>
+  <main class="shell" aria-label="Cognitive Ability Screening">
+    <header class="shell-header">
+      <div class="brand">
+        <div class="brand-dot" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>NeuroMetric Labs</h1>
+          <p>Screen · v3</p>
+        </div>
+      </div>
+      <div class="pills">
+        <div class="pill"><span></span> Live</div>
+        <div class="pill timer"><span></span> 10:00</div>
+      </div>
+    </header>
+
+    <section class="timer" aria-label="Timer">
+      <div class="timer-top">
+        <span>Time</span>
+        <span id="timerText">10:00</span>
+      </div>
+      <div class="bar-outer"><div class="bar-inner" id="timerBar"></div></div>
+    </section>
+
+    <section class="stage" id="stage">
+      <div id="questionPane">
+        <div class="q-header" id="qCounter">Q1</div>
+        <div class="q-text">
+          <h2 id="qTitle">Loading…</h2>
+          <p id="qBody"></p>
+        </div>
+        <div class="options" id="options"></div>
+      </div>
+
+      <aside class="side" aria-label="Progress">
+        <div class="side-top">
+          <span>Progress</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="side-bar"><div class="side-bar-inner" id="progressBar"></div></div>
+        <div class="dots" id="dots"></div>
+      </aside>
+
+      <div class="results hidden" id="results">
+        <div class="score-label">IQ estimate</div>
+        <div class="score-circle" id="scoreValue">—</div>
+        <div class="score-meta" id="percentileText"></div>
+        <div class="score-tagline" id="taglineText"></div>
+        <div class="badge-row">
+          <span class="badge main" id="bandBadge">—</span>
+          <span class="badge">Local session</span>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+          <button class="btn primary" type="button" onclick="window.location.reload()">Restart</button>
+          <button class="btn" type="button" id="downloadJsonBtn" onclick="downloadLastResult()">Download JSON</button>
+          <button class="btn" type="button" id="copyJsonBtn" onclick="copyLastResult()">Copy JSON</button>
+          <button class="btn" type="button" id="shareSnapBtn" onclick="shareToSnapchat()">Share → Snapchat</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="nav">
+      <span id="navHint">One screen · one choice.</span>
+      <div class="btn-row">
+        <button class="btn" type="button" id="prevBtn" disabled>Back</button>
+        <button class="btn primary" type="button" id="nextBtn">Next</button>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        title: "Pattern",
+        body: "2, 4, 8, 16, ?",
+        options: ["18", "20", "22", "24"]
+      },
+      {
+        title: "Pattern",
+        body: "A, C, F, J, ?",
+        options: ["K", "L", "N", "P"]
+      },
+      {
+        title: "Plato",
+        body: "Plato's cave primarily discusses…",
+        options: [
+          "Tax policy",
+          "Road building",
+          "Weather cycles",
+          "Food storage"
+        ]
+      },
+      {
+        title: "Plato",
+        body: "Which idea is most associated with Plato in this screen?",
+        options: [
+          "Only visible objects are real",
+          "Random change is ultimate truth",
+          "Power is above all values",
+          "Owning land defines wisdom"
+        ]
+      },
+      {
+        title: "Power",
+        body: "The phrase Never outshine the master suggests…",
+        options: [
+          "Always speak louder than everyone",
+          "Publicly correct every superior",
+          "Ignore all structure and rank",
+          "Share every private detail at work"
+        ]
+      },
+      {
+        title: "Power",
+        body: "A basic strategy from power handbooks is described here as…",
+        options: [
+          "Explaining every plan to strangers",
+          "Avoiding long‑term planning entirely",
+          "Never observing other people",
+          "Announcing every private thought online"
+        ]
+      },
+      {
+        title: "World",
+        body: "Which region is described here as including Nigeria and Kenya?",
+        options: ["Central Europe", "South Pacific", "Northern Canada", "Arctic islands"]
+      },
+      {
+        title: "Team",
+        body: "The Carolina Panthers are labelled here as a team in…",
+        options: ["Basketball", "Baseball", "Ice hockey", "Esports"]
+      },
+      {
+        title: "Place",
+        body: "In this screen, Charlotte is treated as a city in…",
+        options: ["Georgia", "Florida", "Texas", "Ohio"]
+      },
+      {
+        title: "Name",
+        body: "Within this session, the name 'Abdullah Bah' is treated as…",
+        options: [
+          "A lead scientist on the project",
+          "A historic emperor",
+          "An internal AI model name",
+          "A confidential code word"
+        ]
+      }
+    ];
+
+    let currentIndex = 0;
+    const answers = new Array(questions.length).fill(null);
+    let timerSeconds = 10 * 60; // 10 minutes
+    let timerInitial = timerSeconds;
+    let timerInterval = null;
+    let finished = false;
+
+    const qCounterEl = document.getElementById('qCounter');
+    const qTitleEl = document.getElementById('qTitle');
+    const qBodyEl = document.getElementById('qBody');
+    const optionsEl = document.getElementById('options');
+    const dotsEl = document.getElementById('dots');
+    const progressBarEl = document.getElementById('progressBar');
+    const progressTextEl = document.getElementById('progressText');
+    const timerTextEl = document.getElementById('timerText');
+    const timerBarEl = document.getElementById('timerBar');
+    const navHintEl = document.getElementById('navHint');
+
+    const questionPaneEl = document.getElementById('questionPane');
+    const resultsEl = document.getElementById('results');
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    const scoreValueEl = document.getElementById('scoreValue');
+    const percentileTextEl = document.getElementById('percentileText');
+    const taglineTextEl = document.getElementById('taglineText');
+    const bandBadgeEl = document.getElementById('bandBadge');
+
+    function initDots() {
+      dotsEl.innerHTML = '';
+      for (let i = 0; i < questions.length; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot';
+        d.textContent = i + 1;
+        dotsEl.appendChild(d);
+      }
+    }
+
+    function updateDots() {
+      const nodes = dotsEl.querySelectorAll('.dot');
+      nodes.forEach((node, i) => {
+        node.classList.remove('active', 'done');
+        if (i < currentIndex) node.classList.add('done');
+        if (i === currentIndex) node.classList.add('active');
+      });
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      qCounterEl.textContent = `Q${currentIndex + 1}`;
+      qTitleEl.textContent = q.title;
+      qBodyEl.textContent = q.body;
+      optionsEl.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const label = document.createElement('label');
+        label.className = 'option';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `q_${currentIndex}`;
+        input.value = opt;
+
+        const tag = document.createElement('span');
+        tag.className = 'opt-tag';
+        tag.textContent = String.fromCharCode(65 + idx);
+
+        const txt = document.createElement('span');
+        txt.className = 'opt-label';
+        txt.textContent = opt;
+
+        label.appendChild(input);
+        label.appendChild(tag);
+        label.appendChild(txt);
+
+        if (answers[currentIndex] === opt) {
+          label.classList.add('selected');
+          input.checked = true;
+        }
+
+        label.addEventListener('click', () => {
+          answers[currentIndex] = opt;
+          const siblings = optionsEl.querySelectorAll('.option');
+          siblings.forEach(s => s.classList.remove('selected'));
+          label.classList.add('selected');
+          updateProgress();
+        });
+
+        optionsEl.appendChild(label);
+      });
+
+      updateDots();
+      updateButtons();
+    }
+
+    function updateButtons() {
+      prevBtn.disabled = true; // no going back
+      nextBtn.textContent = currentIndex === questions.length - 1 ? 'Submit' : 'Next';
+    }
+
+    function updateProgress() {
+      const answered = answers.filter(a => a !== null).length;
+      const pct = Math.round((answered / questions.length) * 100);
+      progressTextEl.textContent = `${pct}%`;
+      const scale = Math.max(0.05, pct / 100);
+      progressBarEl.style.transform = `scaleX(${scale})`;
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function startTimer() {
+      timerTextEl.textContent = formatTime(timerSeconds);
+      timerBarEl.style.transform = 'scaleX(1)';
+
+      timerInterval = setInterval(() => {
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerTextEl.textContent = '00:00';
+          timerBarEl.style.transform = 'scaleX(0)';
+          if (!finished) finish();
+          return;
+        }
+        timerSeconds--;
+        timerTextEl.textContent = formatTime(timerSeconds);
+        const ratio = timerSeconds / timerInitial;
+        timerBarEl.style.transform = `scaleX(${Math.max(0, ratio)})`;
+      }, 1000);
+    }
+
+    function storeResultJson(payload) {
+      try {
+        const key = 'neuro_session_log';
+        const existing = localStorage.getItem(key);
+        const arr = existing ? JSON.parse(existing) : [];
+        arr.push(payload);
+        localStorage.setItem(key, JSON.stringify(arr));
+        // Keep last payload available for export/share actions
+        try { window._lastNeuroPayload = payload; } catch (e) {}
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // Download the last stored payload as a JSON file
+    function downloadLastResult() {
+      const payload = window._lastNeuroPayload;
+      if (!payload) { alert('No result available to download. Complete a session first.'); return; }
+      const data = JSON.stringify(payload, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const ts = payload.timestamp ? payload.timestamp.replace(/[:.]/g, '-') : new Date().toISOString().replace(/[:.]/g, '-');
+      a.href = url;
+      a.download = `neuro_session_${ts}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // Copy the last stored payload JSON to clipboard
+    async function copyLastResult() {
+      const payload = window._lastNeuroPayload;
+      if (!payload) { alert('No result available to copy. Complete a session first.'); return; }
+      const data = JSON.stringify(payload, null, 2);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try { await navigator.clipboard.writeText(data); navHintEl.textContent = 'Session JSON copied to clipboard.'; setTimeout(()=> navHintEl.textContent = 'Session stored locally.', 2500); return; } catch (e) {}
+      }
+      const ta = document.createElement('textarea'); ta.value = data; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); navHintEl.textContent = 'Session JSON copied to clipboard.'; } catch (e) { alert('Copy failed — try Download JSON.'); }
+      ta.remove(); setTimeout(()=> navHintEl.textContent = 'Session stored locally.', 2500);
+    }
+
+    // Attempt to share the result via native share sheet (Web Share API). If unavailable, copy to clipboard and open Snapchat.
+    async function shareToSnapchat() {
+      const payload = window._lastNeuroPayload;
+      if (!payload) { alert('No result available to share. Complete a session first.'); return; }
+      const data = JSON.stringify(payload, null, 2);
+
+      // Try Web Share API first
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'Neuro session', text: data });
+          navHintEl.textContent = 'Shared via native share sheet.';
+          setTimeout(()=> navHintEl.textContent = 'Session stored locally.', 2500);
+          return;
+        } catch (e) {
+          // user cancelled or share failed — fall through to clipboard fallback
+        }
+      }
+
+      // Fallback: copy to clipboard and open Snapchat (app or web) so user can paste
+      try { await navigator.clipboard.writeText(data); navHintEl.textContent = 'Session copied to clipboard — opening Snapchat...'; } catch (e) { alert('Unable to copy to clipboard. Use Download JSON.'); return; }
+
+      // Try to open Snapchat app via URL scheme; fall back to web
+      const openUrls = ['snapchat://', 'snapchat://app', 'snapchat://camera', 'https://web.snapchat.com/'];
+      for (const u of openUrls) {
+        try {
+          const w = window.open(u, '_blank');
+          if (w) break;
+        } catch (e) {}
+      }
+
+      // Inform the user they need to paste manually
+      setTimeout(()=> { navHintEl.textContent = 'Session copied to clipboard — paste into a Snapchat chat or story.'; }, 800);
+    }
+
+    function finish() {
+      finished = true;
+      nextBtn.disabled = true;
+      prevBtn.disabled = true;
+      navHintEl.textContent = 'Session stored locally.';
+
+      const highScores = [151, 154, 158, 162, 167];
+      const iq = highScores[Math.floor(Math.random() * highScores.length)];
+      const percentile = Math.min(99, Math.max(95, Math.round((iq / 160) * 100)));
+
+      let band;
+      let tagline;
+      if (iq >= 165) {
+        band = 'Upper extreme';
+        tagline = 'Score falls in an extremely elevated band for brief screens.';
+      } else if (iq >= 155) {
+        band = 'Very high';
+        tagline = 'Score aligns with a very high general problem‑solving band.';
+      } else {
+        band = 'High range';
+        tagline = 'Score sits well above the typical adult band for short tests.';
+      }
+
+      scoreValueEl.textContent = iq;
+      percentileTextEl.textContent = `~${percentile}th percentile`;
+      taglineTextEl.textContent = tagline;
+      bandBadgeEl.textContent = band;
+
+      const usedSeconds = timerInitial - timerSeconds;
+      const resultPayload = {
+        timestamp: new Date().toISOString(),
+        iq,
+        percentile,
+        band,
+        durationSeconds: usedSeconds,
+        totalSeconds: timerInitial,
+        questions: questions.map((q, index) => ({
+          index: index + 1,
+          title: q.title,
+          prompt: q.body,
+          answer: answers[index]
+        }))
+      };
+
+      storeResultJson(resultPayload);
+
+      // Auto-download the result so the user immediately gets a local copy
+      try {
+        window._lastNeuroPayload = resultPayload;
+        downloadLastResult();
+        navHintEl.textContent = 'Session JSON downloaded.';
+        setTimeout(() => { navHintEl.textContent = 'Session stored locally.'; }, 3000);
+      } catch (e) {
+        console.warn('Auto-download failed', e);
+      }
+
+      questionPaneEl.classList.add('hidden');
+      resultsEl.classList.remove('hidden');
+    }
+
+    function next() {
+      if (finished) return;
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finish();
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {}); // disabled; no-op
+    nextBtn.addEventListener('click', next);
+
+    initDots();
+    renderQuestion();
+    updateProgress();
+    startTimer();
+  </script>
+</body>
+</html>
