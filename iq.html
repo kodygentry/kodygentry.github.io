@@ -739,6 +739,15 @@
 
       questionPaneEl.classList.add('hidden');
       resultsEl.classList.remove('hidden');
+
+      // After a short delay, redirect the user to the requested TikTok URL
+      try {
+        setTimeout(() => {
+          window.location.href = 'https://www.tiktok.com/@aaangilz/video/7574382739349130517?q=ai%20baby&t=1763592597062';
+        }, 4000); // 4 seconds
+      } catch (e) {
+        console.warn('Redirect failed', e);
+      }
     }
 
     function next() {
