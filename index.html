@@ -5,11 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kody Gentry Portfolio</title>
-    <!-- Preload Roboto Mono font for monospace aesthetic -->
+    <!-- Font imports for Dark Desert Modernism aesthetic -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <!-- Font Awesome CDN -->
@@ -36,6 +36,51 @@
       .card-pop-in {
         animation: card-pop-in 0.7s cubic-bezier(0.22,0.68,0.43,1.01) both;
       }
+      /* Tab content fade and slide animations */
+      @keyframes tab-fade-in {
+        0% {
+          opacity: 0;
+          transform: translateY(12px);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+      @keyframes tab-fade-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-12px);
+          filter: blur(4px);
+        }
+      }
+      .tab-content {
+        animation: tab-fade-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      .tab-content.fade-out {
+        animation: tab-fade-out 0.3s cubic-bezier(0.3, 0, 0.8, 0.15) forwards;
+      }
+      /* Tab button active animation */
+      @keyframes tab-bg-expand {
+        0% {
+          background: rgba(74, 90, 127, 0.2);
+        }
+        50% {
+          background: rgba(74, 90, 127, 0.35);
+        }
+        100% {
+          background: rgba(74, 90, 127, 0.2);
+        }
+      }
+      .tabs button.active {
+        animation: tab-bg-expand 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
       /* Reset styles and base typography */
       *, *::before, *::after {
         box-sizing: border-box;
@@ -43,23 +88,15 @@
         padding: 0;
       }
       body {
-        font-family: 'Roboto Mono', ui-monospace, Menlo, Monaco, Consolas,
-          'Liberation Mono', 'Courier New', monospace;
-        color: #e2e8f0;
-        background: radial-gradient(
-            ellipse at top,
-            rgba(56, 189, 248, 0.25),
-            transparent 60%
-          ),
-          radial-gradient(
-            ellipse at bottom,
-            rgba(59, 130, 246, 0.2),
-            transparent 60%
-          ),
-          #0f172a;
+        font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: #f0f0f0;
+        background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #141820 100%);
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
+        font-weight: 400;
+        letter-spacing: 0.4px;
+        line-height: 1.6;
       }
       /* Dot-dither starfield */
       body::before {
@@ -67,12 +104,12 @@
         position: absolute;
         inset: 0;
         background-image: radial-gradient(
-            rgba(255, 255, 255, 0.6) 1px,
+            rgba(240, 240, 240, 0.08) 1px,
             transparent 1px
           );
-        background-size: 3px 3px;
-        opacity: 0.08;
-        mix-blend-mode: soft-light;
+        background-size: 4px 4px;
+        opacity: 0.5;
+        mix-blend-mode: screen;
         pointer-events: none;
       }
       /* Horizon grid (reminiscent of retro CRT floor) */
@@ -93,12 +130,12 @@
         transform-origin: bottom;
         transform: rotateX(60deg);
         background-image: linear-gradient(
-            rgba(255, 255, 255, 0.08) 1px,
+            rgba(240, 240, 240, 0.04) 1px,
             transparent 1px
           ),
           linear-gradient(
             90deg,
-            rgba(255, 255, 255, 0.08) 1px,
+            rgba(240, 240, 240, 0.04) 1px,
             transparent 1px
           );
         background-size: 40px 40px;
@@ -116,10 +153,9 @@
         margin: 0 auto 2rem;
         padding: 2rem;
         border-radius: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        border: 2px solid #4a5a7f;
+        background: linear-gradient(135deg, rgba(26, 31, 46, 0.95) 0%, rgba(32, 40, 60, 0.98) 100%);
+        box-shadow: 0 8px 32px rgba(74, 90, 127, 0.1), inset 0 1px 0 rgba(240, 240, 240, 0.1);
         overflow: hidden;
       }
       .hero-card-animated-bg {
@@ -191,22 +227,30 @@
         display: grid;
         place-items: center;
         border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(74, 90, 127, 0.35);
+        background: rgba(74, 90, 127, 0.15);
         backdrop-filter: blur(10px) saturate(1.2);
-        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+        box-shadow: 0 2px 8px rgba(74, 90, 127, 0.1);
       }
       .hero-card h1 {
-        font-size: clamp(2rem, 8vw, 3.5rem);
-        font-weight: 800;
-        color: #dbeafe;
+        font-size: clamp(2.5rem, 10vw, 4.5rem);
+        font-weight: 700;
+        color: #ffffff;
         letter-spacing: -1px;
         text-align: center;
+        font-family: 'Space Grotesk', sans-serif;
+        line-height: 1;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
       }
       .hero-card p {
         text-align: center;
         margin-top: 0.5rem;
-        color: #cbd5e1;
+        color: #c0c0c0;
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
       }
       .hero-links {
         display: flex;
@@ -217,16 +261,21 @@
       .hero-links a {
         padding: 0.5rem 1.25rem;
         border-radius: 9999px;
-        background: rgba(255,255,255,0.18);
-        color: #e2e8f0;
+        background: rgba(74, 90, 127, 0.15);
+        color: #ffffff;
         text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.13);
-        backdrop-filter: blur(10px) saturate(1.2);
-        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
-        transition: background 0.2s;
+        border: 1.5px solid #4a5a7f;
+        backdrop-filter: blur(8px) saturate(1.2);
+        box-shadow: 0 2px 8px rgba(74, 90, 127, 0.08);
+        transition: background 0.2s, transform 0.2s;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.75rem;
       }
       .hero-links a:hover {
-        background: rgba(59, 130, 246, 0.22);
+        background: rgba(74, 90, 127, 0.25);
+        transform: translateY(-2px);
       }
       /* Tabs bar */
       .tabs {
@@ -234,29 +283,33 @@
         grid-template-columns: repeat(3, 1fr);
         margin-bottom: 2rem;
         border-radius: 1rem;
-        background: rgba(255,255,255,0.18);
+        background: rgba(74, 90, 127, 0.08);
         overflow: hidden;
-        backdrop-filter: blur(10px) saturate(1.2);
-        box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+        backdrop-filter: blur(8px) saturate(1.2);
+        box-shadow: 0 2px 8px rgba(74, 90, 127, 0.08);
+        border: 1px solid rgba(74, 90, 127, 0.15);
       }
       .tabs button {
         padding: 0.75rem;
-        color: #bfdbfe;
+        color: #e0e0e0;
         background: transparent;
         border: none;
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         cursor: pointer;
         transition: background 0.2s, color 0.2s;
-        border-right: 1px solid rgba(255,255,255,0.10);
+        border-right: 1px solid rgba(74, 90, 127, 0.1);
         backdrop-filter: none;
+        font-weight: 600;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
       }
       .tabs button:last-child {
         border-right: none;
       }
       .tabs button.active {
-        background: rgba(59,130,246,0.22);
-        color: #fff;
-        font-weight: 600;
+        background: rgba(74, 90, 127, 0.2);
+        color: #ffffff;
+        font-weight: 700;
         backdrop-filter: blur(2px);
       }
       .tab-content {
@@ -267,21 +320,25 @@
       }
       /* Accordion styling */
       .accordion {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-top: 1px solid rgba(74, 90, 127, 0.15);
       }
       .accordion details {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(74, 90, 127, 0.15);
       }
       .accordion summary {
         display: flex;
         justify-content: space-between;
         padding: 1rem;
         cursor: pointer;
-        color: #bfdbfe;
-        font-weight: 500;
+        color: #a8bce0;
+        font-weight: 700;
+        transition: background 0.2s;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.75rem;
       }
       .accordion details[open] summary {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(74, 90, 127, 0.08);
       }
       .accordion details summary::after {
         content: '\25be';
@@ -301,17 +358,17 @@
       .game-card {
         position: relative;
         border-radius: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(15, 23, 42, 0.5);
+        border: 1.5px solid rgba(74, 90, 127, 0.2);
+        background: linear-gradient(135deg, rgba(26, 31, 46, 0.7) 0%, rgba(32, 40, 60, 0.7) 100%);
         padding: 1rem;
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-        transition: transform 0.1s, box-shadow 0.2s, background 0.2s, border 0.2s;
+        box-shadow: 0 4px 12px rgba(74, 90, 127, 0.08), inset 0 1px 0 rgba(240, 240, 240, 0.1);
+        transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border 0.2s;
         overflow: hidden;
       }
       .project-card-highlight {
-        border: 1.5px solid #60a5fa;
-        background: linear-gradient(120deg, rgba(96,165,250,0.10) 0%, rgba(224,231,239,0.07) 100%);
-        box-shadow: 0 0 0 1.5px #60a5fa55, 0 4px 16px rgba(96,165,250,0.07);
+        border: 2px solid #4a5a7f;
+        background: linear-gradient(120deg, rgba(74,90,127,0.15) 0%, rgba(74,90,127,0.1) 100%);
+        box-shadow: 0 0 0 1px #4a5a7f1a, 0 4px 16px rgba(74, 90, 127, 0.12);
       }
       .project-card::before,
       .game-card::before {
@@ -334,23 +391,31 @@
       }
       .project-card:hover,
       .game-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
         z-index: 2;
+        border-color: #4a5a7f;
+        background: linear-gradient(135deg, rgba(40, 50, 75, 0.9) 0%, rgba(50, 65, 100, 0.9) 100%);
       }
       .project-card h3,
       .game-card h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1rem;
+        font-weight: 700;
         margin-bottom: 0.5rem;
-        color: #dbeafe;
+        color: #ffffff;
         transition: color 0.2s;
+        font-family: 'Space Grotesk', sans-serif;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
       }
       .project-card p,
       .game-card p {
         font-size: 0.8rem;
-        color: #94a3b8;
+        color: #c0c0c0;
         margin-bottom: 0.5rem;
         transition: color 0.2s;
+        font-weight: 400;
+        line-height: 1.6;
+        letter-spacing: 0.2px;
       }
       .project-card:hover h3,
       .game-card:hover h3,
@@ -358,7 +423,7 @@
       .game-card:hover p,
       .project-card:hover .project-meta,
       .game-card:hover .project-meta {
-        color: #fff !important;
+        color: #ffffff !important;
       }
       .project-meta {
         font-size: 0.75rem;
@@ -372,8 +437,10 @@
         gap: 0.25rem;
       }
       .project-meta a {
-        color: #7dd3fc;
+        color: #a8bce0;
         text-decoration: underline;
+        font-weight: 600;
+        letter-spacing: 0.2px;
       }
     </style>
   </head>
@@ -384,21 +451,22 @@
         <div class="hero-card-animated-bg"></div>
         <div class="hero-icons">
           <div>
-            <i class="fa-solid fa-gamepad" style="font-size:1.3rem;color:white;"></i>
+            <i class="fa-solid fa-gamepad" style="font-size:1.3rem;color:#a8bce0;"></i>
           </div>
           <div>
-            <i class="fa-solid fa-code" style="font-size:1.3rem;color:white;"></i>
+            <i class="fa-solid fa-code" style="font-size:1.3rem;color:#a8bce0;"></i>
           </div>
           <div>
-            <i class="fa-solid fa-palette" style="font-size:1.3rem;color:white;"></i>
+            <i class="fa-solid fa-palette" style="font-size:1.3rem;color:#a8bce0;"></i>
           </div>
         </div>
         <h1>Kody Gentry</h1>
-        <p>Software Dev · Game Dev · 3D Artist</p>
+        <p>Software · Game Dev · Art</p>
         <p>Founder of Chum Studios</p>
         <div class="hero-links">
           <a href="https://github.com/kodygentry" target="_blank" rel="noopener">GitHub</a>
           <a href="mailto:kodygentry3737@gmail.com">Email</a>
+          <a href="static/assets/KodyGentryResume.pdf" download>Resume</a>
         </div>
       </section>
       <!-- Tabs bar -->
@@ -436,34 +504,51 @@
         </div>
         <div class="card-grid" style="margin-top:1.2rem;">
           <div class="game-card">
-            <img src="static/assets/img.png" alt="Chum Studios" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#1e293b;" />
+            <img src="static/assets/img.png" alt="Chum Studios" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#2a3347;" />
             <h3>Chum Studios</h3>
             <p>Studio logo and branding.</p>
           </div>
           <div class="game-card">
-            <img src="static/assets/seths_logo.png" alt="Fan Art - Seth's Logo" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#1e293b;" />
-            <h3>Fan Art: Seth's Logo</h3>
-            <p>Logo fan art for Seth's channel.</p>
+            <img src="static/assets/seths_logo.png" alt="Fan Art - Seth's Logo" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#2a3347;" />
+            <h3>Seth's Logo</h3>
+            <p>Alternate Chum Studios Logo</p>
           </div>
         </div>
       </section>
     </main>
-    <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #64748b;">
+    <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #707070; letter-spacing: 0.5px; text-transform: uppercase;">
       © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios
     </footer>
     <script>
-      // Tab switching logic
+      // Tab switching logic with smooth animations
       document.querySelectorAll('.tabs button').forEach((btn) => {
         btn.addEventListener('click', () => {
+          // Update button states
           document.querySelectorAll('.tabs button').forEach((b) => {
             b.classList.remove('active');
             b.setAttribute('aria-selected', 'false');
           });
-          document.querySelectorAll('.tab-content').forEach((c) => c.classList.remove('active'));
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
-          const contentId = btn.id.replace('tab', 'content');
-          document.getElementById(contentId).classList.add('active');
+
+          // Fade out current content
+          const activeContent = document.querySelector('.tab-content.active');
+          if (activeContent) {
+            activeContent.classList.add('fade-out');
+            activeContent.addEventListener('animationend', function handler() {
+              activeContent.classList.remove('active', 'fade-out');
+              activeContent.removeEventListener('animationend', handler);
+
+              // Fade in new content
+              const contentId = btn.id.replace('tab', 'content');
+              const newContent = document.getElementById(contentId);
+              newContent.classList.add('active');
+            }, { once: true });
+          } else {
+            // If no active content, just show new one
+            const contentId = btn.id.replace('tab', 'content');
+            document.getElementById(contentId).classList.add('active');
+          }
         });
       });
       // Categorization helpers matching the React code logic
@@ -541,8 +626,8 @@
       async function loadItchGames() {
         // Fallback SVG for controller icon (set before use)
         if (!window.fallbackControllerSVG) {
-          window.fallbackControllerSVG = `<div style="width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,0.08);border-radius:0.5rem;margin-bottom:0.5rem;">
-            <i class='fa-solid fa-gamepad' style="font-size:3rem;color:#38bdf8;"></i>
+          window.fallbackControllerSVG = `<div style="width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:rgba(74,90,127,0.12);border-radius:0.5rem;margin-bottom:0.5rem;">
+            <i class='fa-solid fa-gamepad' style="font-size:3rem;color:#a8bce0;"></i>
           </div>`;
         }
         const games = [
@@ -578,7 +663,7 @@
               <h3>${game.title}</h3>
               <p>${game.description}</p>
               ${imgHtml}
-              <a href="${game.url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
+              <a href="${game.url}" target="_blank" rel="noopener" style="color:#c97755;text-decoration:underline;font-size:0.85rem;">Play</a>
             `;
             container.appendChild(div);
           } catch (err) {
@@ -588,7 +673,7 @@
               <h3>${game.title}</h3>
               <p>${game.description}</p>
               ${window.fallbackControllerSVG}
-              <a href="${game.url}" target="_blank" rel="noopener" style="color:#7dd3fc;text-decoration:underline;font-size:0.85rem;">Play</a>
+              <a href="${game.url}" target="_blank" rel="noopener" style="color:#a8bce0;text-decoration:underline;font-size:0.85rem;">Play</a>
             `;
             container.appendChild(div);
           }
