@@ -1,4 +1,3 @@
-  <!-- Stray JS removed: animation code is now in the correct <script> block below -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,7 +12,12 @@
       rel="stylesheet"
     />
     <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
       /* Card populate-in animation */
       @keyframes card-pop-in {
@@ -34,7 +38,7 @@
         }
       }
       .card-pop-in {
-        animation: card-pop-in 0.7s cubic-bezier(0.22,0.68,0.43,1.01) both;
+        animation: card-pop-in 0.7s cubic-bezier(0.22, 0.68, 0.43, 1.01) both;
       }
       /* Tab content fade and slide animations */
       @keyframes tab-fade-in {
@@ -88,7 +92,8 @@
         padding: 0;
       }
       body {
-        font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          sans-serif;
         color: #f0f0f0;
         background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #141820 100%);
         min-height: 100vh;
@@ -98,15 +103,15 @@
         letter-spacing: 0.4px;
         line-height: 1.6;
       }
+      body.no-scroll {
+        overflow: hidden;
+      }
       /* Dot-dither starfield */
       body::before {
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(
-            rgba(240, 240, 240, 0.08) 1px,
-            transparent 1px
-          );
+        background-image: radial-gradient(rgba(240, 240, 240, 0.08) 1px, transparent 1px);
         background-size: 4px 4px;
         opacity: 0.5;
         mix-blend-mode: screen;
@@ -129,15 +134,8 @@
         inset: 0;
         transform-origin: bottom;
         transform: rotateX(60deg);
-        background-image: linear-gradient(
-            rgba(240, 240, 240, 0.04) 1px,
-            transparent 1px
-          ),
-          linear-gradient(
-            90deg,
-            rgba(240, 240, 240, 0.04) 1px,
-            transparent 1px
-          );
+        background-image: linear-gradient(rgba(240, 240, 240, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(240, 240, 240, 0.04) 1px, transparent 1px);
         background-size: 40px 40px;
         pointer-events: none;
       }
@@ -154,7 +152,11 @@
         padding: 2rem;
         border-radius: 1.5rem;
         border: 2px solid #4a5a7f;
-        background: linear-gradient(135deg, rgba(26, 31, 46, 0.95) 0%, rgba(32, 40, 60, 0.98) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 31, 46, 0.95) 0%,
+          rgba(32, 40, 60, 0.98) 100%
+        );
         box-shadow: 0 8px 32px rgba(74, 90, 127, 0.1), inset 0 1px 0 rgba(240, 240, 240, 0.1);
         overflow: hidden;
       }
@@ -164,10 +166,16 @@
         z-index: 0;
         border-radius: inherit;
         pointer-events: none;
-        background: linear-gradient(120deg, #38bdf8 0%, #64748b 40%, #e0e7ef 80%, #ffffff 100%);
+        background: linear-gradient(
+          120deg,
+          #38bdf8 0%,
+          #64748b 40%,
+          #e0e7ef 80%,
+          #ffffff 100%
+        );
         opacity: 0.38;
         filter: blur(32px) brightness(1.2) saturate(1.1);
-        animation: wave-gradient 3.5s cubic-bezier(0.4,0.2,0.6,0.8) infinite alternate;
+        animation: wave-gradient 3.5s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite alternate;
         background-size: 200% 200%;
       }
       .hero-card-animated-bg::after {
@@ -179,8 +187,7 @@
         z-index: 1;
         opacity: 1;
         mix-blend-mode: normal;
-        background-image:
-          url('https://www.transparenttextures.com/patterns/noise.png'),
+        background-image: url('https://www.transparenttextures.com/patterns/noise.png'),
           url('https://www.transparenttextures.com/patterns/noise.png'),
           url('https://www.transparenttextures.com/patterns/noise.png'),
           url('https://www.transparenttextures.com/patterns/noise.png');
@@ -359,7 +366,11 @@
         position: relative;
         border-radius: 1rem;
         border: 1.5px solid rgba(74, 90, 127, 0.2);
-        background: linear-gradient(135deg, rgba(26, 31, 46, 0.7) 0%, rgba(32, 40, 60, 0.7) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 31, 46, 0.7) 0%,
+          rgba(32, 40, 60, 0.7) 100%
+        );
         padding: 1rem;
         box-shadow: 0 4px 12px rgba(74, 90, 127, 0.08), inset 0 1px 0 rgba(240, 240, 240, 0.1);
         transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border 0.2s;
@@ -367,7 +378,11 @@
       }
       .project-card-highlight {
         border: 2px solid #4a5a7f;
-        background: linear-gradient(120deg, rgba(74,90,127,0.15) 0%, rgba(74,90,127,0.1) 100%);
+        background: linear-gradient(
+          120deg,
+          rgba(74, 90, 127, 0.15) 0%,
+          rgba(74, 90, 127, 0.1) 100%
+        );
         box-shadow: 0 0 0 1px #4a5a7f1a, 0 4px 16px rgba(74, 90, 127, 0.12);
       }
       .project-card::before,
@@ -379,7 +394,13 @@
         z-index: 1;
         opacity: 0;
         pointer-events: none;
-        background: linear-gradient(120deg, #38bdf8 0%, #64748b 40%, #e0e7ef 80%, #ffffff 100%);
+        background: linear-gradient(
+          120deg,
+          #38bdf8 0%,
+          #64748b 40%,
+          #e0e7ef 80%,
+          #ffffff 100%
+        );
         filter: blur(8px) brightness(1.05) saturate(1.05);
         background-size: 200% 200%;
         transition: opacity 0.25s;
@@ -387,14 +408,18 @@
       .project-card:hover::before,
       .game-card:hover::before {
         opacity: 0.45;
-        animation: wave-gradient 3.5s cubic-bezier(0.4,0.2,0.6,0.8) infinite alternate;
+        animation: wave-gradient 3.5s cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite alternate;
       }
       .project-card:hover,
       .game-card:hover {
         transform: translateY(-3px);
         z-index: 2;
         border-color: #4a5a7f;
-        background: linear-gradient(135deg, rgba(40, 50, 75, 0.9) 0%, rgba(50, 65, 100, 0.9) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(40, 50, 75, 0.9) 0%,
+          rgba(50, 65, 100, 0.9) 100%
+        );
       }
       .project-card h3,
       .game-card h3 {
@@ -442,22 +467,131 @@
         font-weight: 600;
         letter-spacing: 0.2px;
       }
+
+      /* Welcome screen overlay */
+      #welcome-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top, #1f2933 0%, #050816 55%, #020617 100%);
+        color: #e5e7eb;
+        overflow: hidden;
+        opacity: 1;
+        transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.2, 1.6, 0.4, 1.1);
+      }
+      #welcome-screen::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(248, 250, 252, 0.12) 1px, transparent 1px);
+        background-size: 4px 4px;
+        mix-blend-mode: screen;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .welcome-shell {
+        position: relative;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        animation: welcome-shell-pop 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      .welcome-text {
+        font-size: clamp(2.8rem, 9vw, 4rem);
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        text-align: center;
+        color: #f9fafb;
+        font-weight: 700;
+        animation: welcome-text-flicker 3.6s ease-in-out 0.4s infinite;
+      }
+      .welcome-bar {
+        position: relative;
+        width: 100%;
+        height: 3px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.35);
+        overflow: hidden;
+      }
+      .welcome-bar-fill {
+        position: absolute;
+        inset: 0;
+        transform-origin: left;
+        transform: scaleX(0);
+        background: linear-gradient(90deg, #38bdf8, #a855f7, #f97316);
+        animation: welcome-bar-fill 3s ease-out forwards;
+      }
+      #welcome-screen.welcome-out {
+        opacity: 0;
+        transform: scale(1.2) translateY(-32px) rotate(1deg);
+      }
+      #welcome-screen.welcome-out .welcome-text {
+        transform: scale(1.35) translateY(-10px);
+      }
+      @keyframes welcome-shell-pop {
+        0% {
+          opacity: 0;
+          transform: scale(1.35) translateY(18px);
+        }
+        60% {
+          opacity: 1;
+          transform: scale(0.88) translateY(-6px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      @keyframes welcome-text-flicker {
+        0%, 82%, 100% {
+          text-shadow: 0 0 0 rgba(248, 250, 252, 0.2);
+        }
+        84% {
+          text-shadow: 0 0 8px rgba(248, 250, 252, 0.7);
+        }
+        88% {
+          text-shadow: 0 0 2px rgba(248, 250, 252, 0.3);
+        }
+        92% {
+          text-shadow: 0 0 14px rgba(248, 250, 252, 0.85);
+        }
+      }
+      @keyframes welcome-bar-fill {
+        0% {
+          transform: scaleX(0);
+        }
+        100% {
+          transform: scaleX(1);
+        }
+      }
     </style>
   </head>
-  <body>
+  <body class="no-scroll">
+    <!-- Welcome screen overlay -->
+    <div id="welcome-screen">
+      <div class="welcome-shell">
+        <div class="welcome-text">WELCOME</div>
+        <div class="welcome-bar"><div class="welcome-bar-fill"></div></div>
+      </div>
+    </div>
+
     <main class="container">
       <!-- Hero section -->
       <section class="hero-card">
         <div class="hero-card-animated-bg"></div>
         <div class="hero-icons">
           <div>
-            <i class="fa-solid fa-gamepad" style="font-size:1.3rem;color:#a8bce0;"></i>
+            <i class="fa-solid fa-gamepad" style="font-size: 1.3rem; color: #a8bce0"></i>
           </div>
           <div>
-            <i class="fa-solid fa-code" style="font-size:1.3rem;color:#a8bce0;"></i>
+            <i class="fa-solid fa-code" style="font-size: 1.3rem; color: #a8bce0"></i>
           </div>
           <div>
-            <i class="fa-solid fa-palette" style="font-size:1.3rem;color:#a8bce0;"></i>
+            <i class="fa-solid fa-palette" style="font-size: 1.3rem; color: #a8bce0"></i>
           </div>
         </div>
         <h1>Kody Gentry</h1>
@@ -471,12 +605,18 @@
       </section>
       <!-- Tabs bar -->
       <nav class="tabs" role="tablist">
-        <button id="tab-software" class="active" role="tab" aria-selected="true">Software</button>
+        <button id="tab-software" class="active" role="tab" aria-selected="true">
+          Software
+        </button>
         <button id="tab-games" role="tab" aria-selected="false">Games</button>
         <button id="tab-art" role="tab" aria-selected="false">3D / Art</button>
       </nav>
       <!-- Tab contents -->
-      <section id="content-software" class="tab-content active" aria-labelledby="tab-software">
+      <section
+        id="content-software"
+        class="tab-content active"
+        aria-labelledby="tab-software"
+      >
         <div class="accordion">
           <details>
             <summary>Side projects</summary>
@@ -497,26 +637,57 @@
       </section>
       <section id="content-art" class="tab-content" aria-labelledby="tab-art">
         <div class="game-card">
-          <h3>3D Props & Environments</h3>
+          <h3>3D Props &amp; Environments</h3>
           <p>Assorted low-poly props and moody environment studies.</p>
           <strong>Work in progress!</strong>
           <p class="project-meta"><span>Tools:</span> Blender, Game Art</p>
         </div>
-        <div class="card-grid" style="margin-top:1.2rem;">
+        <div class="card-grid" style="margin-top: 1.2rem">
           <div class="game-card">
-            <img src="static/assets/img.png" alt="Chum Studios" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#2a3347;" />
+            <img
+              src="static/assets/img.png"
+              alt="Chum Studios"
+              style="
+                width: 100%;
+                height: 160px;
+                object-fit: contain;
+                border-radius: 0.5rem;
+                margin-bottom: 0.5rem;
+                background: #2a3347;
+              "
+            />
             <h3>Chum Studios</h3>
             <p>Studio logo and branding.</p>
           </div>
           <div class="game-card">
-            <img src="static/assets/seths_logo.png" alt="Fan Art - Seth's Logo" style="width:100%;height:160px;object-fit:contain;border-radius:0.5rem;margin-bottom:0.5rem;background:#2a3347;" />
+            <img
+              src="static/assets/seths_logo.png"
+              alt="Fan Art - Seth's Logo"
+              style="
+                width: 100%;
+                height: 160px;
+                object-fit: contain;
+                border-radius: 0.5rem;
+                margin-bottom: 0.5rem;
+                background: #2a3347;
+              "
+            />
             <h3>Seth's Logo</h3>
             <p>Alternate Chum Studios Logo</p>
           </div>
         </div>
       </section>
     </main>
-    <footer style="text-align:center; padding: 1rem 0; font-size: 0.75rem; color: #707070; letter-spacing: 0.5px; text-transform: uppercase;">
+    <footer
+      style="
+        text-align: center;
+        padding: 1rem 0;
+        font-size: 0.75rem;
+        color: #707070;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      "
+    >
       © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios
     </footer>
     <script>
@@ -535,15 +706,19 @@
           const activeContent = document.querySelector('.tab-content.active');
           if (activeContent) {
             activeContent.classList.add('fade-out');
-            activeContent.addEventListener('animationend', function handler() {
-              activeContent.classList.remove('active', 'fade-out');
-              activeContent.removeEventListener('animationend', handler);
+            activeContent.addEventListener(
+              'animationend',
+              function handler() {
+                activeContent.classList.remove('active', 'fade-out');
+                activeContent.removeEventListener('animationend', handler);
 
-              // Fade in new content
-              const contentId = btn.id.replace('tab', 'content');
-              const newContent = document.getElementById(contentId);
-              newContent.classList.add('active');
-            }, { once: true });
+                // Fade in new content
+                const contentId = btn.id.replace('tab', 'content');
+                const newContent = document.getElementById(contentId);
+                newContent.classList.add('active');
+              },
+              { once: true }
+            );
           } else {
             // If no active content, just show new one
             const contentId = btn.id.replace('tab', 'content');
@@ -551,11 +726,37 @@
           }
         });
       });
+
       // Categorization helpers matching the React code logic
-      const SIDE_OVERRIDE = new Set(['SimpleAPI','Marvel-Rivals-Discord-Stat-Bot','KimoTune','Advent-Of-Code-2023']);
-      const GAME_OVERRIDE = new Set(['DevQuest','godot-dot-shader']);
-      const SCHOOL_HINTS = ['assembly','mips','x86','arm','object oriented','oop','data structures','algorithms','cs','class','assignment','lab','university','college','school','project','semester','spring','fall'];
-      const SCHOOL_LANGS = ['C','C++','Assembly','Makefile'];
+      const SIDE_OVERRIDE = new Set([
+        'SimpleAPI',
+        'Marvel-Rivals-Discord-Stat-Bot',
+        'KimoTune',
+        'Advent-Of-Code-2023'
+      ]);
+      const GAME_OVERRIDE = new Set(['DevQuest', 'godot-dot-shader']);
+      const SCHOOL_HINTS = [
+        'assembly',
+        'mips',
+        'x86',
+        'arm',
+        'object oriented',
+        'oop',
+        'data structures',
+        'algorithms',
+        'cs',
+        'class',
+        'assignment',
+        'lab',
+        'university',
+        'college',
+        'school',
+        'project',
+        'semester',
+        'spring',
+        'fall'
+      ];
+      const SCHOOL_LANGS = ['C', 'C++', 'Assembly', 'Makefile'];
       function categorizeRepo(r) {
         if (GAME_OVERRIDE.has(r.name)) return 'game';
         if (SIDE_OVERRIDE.has(r.name)) return 'side';
@@ -568,11 +769,15 @@
       }
       async function loadGithubRepos() {
         try {
-          const res = await fetch('https://api.github.com/users/kodygentry/repos?per_page=100');
+          const res = await fetch(
+            'https://api.github.com/users/kodygentry/repos?per_page=100'
+          );
           if (!res.ok) throw new Error('GitHub ' + res.status);
           const data = await res.json();
           const filtered = data.filter((r) => !r.fork);
-          const sorted = filtered.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0)).slice(0, 60);
+          const sorted = filtered
+            .sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0))
+            .slice(0, 60);
           const categorized = { side: [], school: [], game: [] };
           sorted.forEach((r) => {
             const type = categorizeRepo(r);
@@ -582,19 +787,25 @@
           renderRepos('school-projects', categorized.school);
           renderRepos('game-projects', categorized.game);
         } catch (err) {
-          document.getElementById('side-projects').innerHTML = '<p>Error loading repos: ' + err.message + '</p>';
+          document.getElementById('side-projects').innerHTML =
+            '<p>Error loading repos: ' + err.message + '</p>';
         }
       }
       function renderRepos(id, repos) {
         const container = document.getElementById(id);
         container.innerHTML = '';
         if (!repos || repos.length === 0) {
-          container.innerHTML = '<p class="text-sm text-slate-400">No projects found.</p>';
+          container.innerHTML =
+            '<p class="text-sm text-slate-400">No projects found.</p>';
           return;
         }
         // Highlighted repos for side and school
-        const highlightSide = ["KimoTune","SimpleAPI","Marvel-Rivals-Discord-Stat-Bot"];
-        const highlightSchool = ["Tic-Tac-Toe-AI","Cardiovascular-Disease-Diagnosis-Expert-System","General-CPP-Programs"];
+        const highlightSide = ['KimoTune', 'SimpleAPI', 'Marvel-Rivals-Discord-Stat-Bot'];
+        const highlightSchool = [
+          'Tic-Tac-Toe-AI',
+          'Cardiovascular-Disease-Diagnosis-Expert-System',
+          'General-CPP-Programs'
+        ];
         let highlightList = [];
         if (id === 'side-projects') highlightList = highlightSide;
         if (id === 'school-projects') highlightList = highlightSchool;
@@ -602,9 +813,9 @@
         let sorted = repos.slice();
         if (highlightList.length) {
           const highlights = highlightList
-            .map(name => sorted.find(r => r.name === name))
+            .map((name) => sorted.find((r) => r.name === name))
             .filter(Boolean);
-          const rest = sorted.filter(r => !highlightList.includes(r.name));
+          const rest = sorted.filter((r) => !highlightList.includes(r.name));
           sorted = [...highlights, ...rest];
         }
         sorted.forEach((r, i) => {
@@ -626,9 +837,19 @@
       async function loadItchGames() {
         // Fallback SVG for controller icon (set before use)
         if (!window.fallbackControllerSVG) {
-          window.fallbackControllerSVG = `<div style="width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:rgba(74,90,127,0.12);border-radius:0.5rem;margin-bottom:0.5rem;">
-            <i class='fa-solid fa-gamepad' style="font-size:3rem;color:#a8bce0;"></i>
-          </div>`;
+          window.fallbackControllerSVG = `
+            <div style="
+              width: 100%;
+              height: 120px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: rgba(74, 90, 127, 0.12);
+              border-radius: 0.5rem;
+              margin-bottom: 0.5rem;
+            ">
+              <i class='fa-solid fa-gamepad' style="font-size:3rem;color:#a8bce0;"></i>
+            </div>`;
         }
         const games = [
           {
@@ -646,7 +867,9 @@
         container.innerHTML = '';
         for (const game of games) {
           try {
-            const res = await fetch('https://itch.io/oembed?url=' + encodeURIComponent(game.url));
+            const res = await fetch(
+              'https://itch.io/oembed?url=' + encodeURIComponent(game.url)
+            );
             let data = {};
             if (res.ok) {
               data = await res.json();
@@ -655,7 +878,19 @@
             div.className = 'game-card';
             let imgHtml = '';
             if (data.thumbnail_url) {
-              imgHtml = `<img src="${data.thumbnail_url}" alt="${game.title} cover" style="width:100%;height:120px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;" onerror="this.onerror=null;this.outerHTML=window.fallbackControllerSVG;" />`;
+              imgHtml = `
+                <img
+                  src="${data.thumbnail_url}"
+                  alt="${game.title} cover"
+                  style="
+                    width: 100%;
+                    height: 120px;
+                    object-fit: cover;
+                    border-radius: 0.5rem;
+                    margin-bottom: 0.5rem;
+                  "
+                  onerror="this.onerror=null;this.outerHTML=window.fallbackControllerSVG;"
+                />`;
             } else {
               imgHtml = window.fallbackControllerSVG;
             }
@@ -663,7 +898,14 @@
               <h3>${game.title}</h3>
               <p>${game.description}</p>
               ${imgHtml}
-              <a href="${game.url}" target="_blank" rel="noopener" style="color:#c97755;text-decoration:underline;font-size:0.85rem;">Play</a>
+              <a
+                href="${game.url}"
+                target="_blank"
+                rel="noopener"
+                style="color:#c97755;text-decoration:underline;font-size:0.85rem;"
+              >
+                Play
+              </a>
             `;
             container.appendChild(div);
           } catch (err) {
@@ -673,14 +915,42 @@
               <h3>${game.title}</h3>
               <p>${game.description}</p>
               ${window.fallbackControllerSVG}
-              <a href="${game.url}" target="_blank" rel="noopener" style="color:#a8bce0;text-decoration:underline;font-size:0.85rem;">Play</a>
+              <a
+                href="${game.url}"
+                target="_blank"
+                rel="noopener"
+                style="color:#a8bce0;text-decoration:underline;font-size:0.85rem;"
+              >
+                Play
+              </a>
             `;
             container.appendChild(div);
           }
         }
         // Fallback SVG for controller icon
         if (!window.fallbackControllerSVG) {
-          window.fallbackControllerSVG = `<svg width="100%" height="120" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 0.5rem auto;background:rgba(59,130,246,0.08);border-radius:0.5rem;"><rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/><path d="M7 12h-2m1-1v2"/></svg>`;
+          window.fallbackControllerSVG = `
+            <svg
+              width="100%"
+              height="120"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#38bdf8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="
+                display:block;
+                margin:0 auto 0.5rem auto;
+                background:rgba(59,130,246,0.08);
+                border-radius:0.5rem;
+              "
+            >
+              <rect x="2" y="7" width="20" height="10" rx="5" />
+              <circle cx="7" cy="12" r="1.5" />
+              <circle cx="17" cy="12" r="1.5" />
+              <path d="M7 12h-2m1-1v2" />
+            </svg>`;
         }
       }
       // Initiate data fetches on page load
@@ -688,36 +958,72 @@
       loadItchGames();
     </script>
     <script>
-      // Animate cards as they enter the viewport
-      function animateCardsOnScroll() {
-        const observer = new window.IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('card-pop-in');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.project-card, .game-card').forEach(card => {
-          observer.observe(card);
+  // Animate cards as they enter the viewport
+  function animateCardsOnScroll() {
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('card-pop-in');
+            observer.unobserve(entry.target);
+          }
         });
-      }
-      // Re-run after dynamic content loads, but only patch once
-      if (!window._cardPopInPatched) {
-        window._cardPopInPatched = true;
-        const origRenderRepos = window.renderRepos;
-        window.renderRepos = function(id, repos) {
-          origRenderRepos(id, repos);
-          setTimeout(animateCardsOnScroll, 0);
-        };
-        const origLoadItchGames = window.loadItchGames;
-        window.loadItchGames = async function() {
-          await origLoadItchGames();
-          setTimeout(animateCardsOnScroll, 0);
-        };
-      }
-      // Initial call for cards already in DOM
-      window.addEventListener('DOMContentLoaded', animateCardsOnScroll);
-    </script>
-  </body>
-</html>
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.project-card, .game-card').forEach((card) => {
+      observer.observe(card);
+    });
+  }
+
+  // Re-run after dynamic content loads, but only patch once
+  if (!window._cardPopInPatched) {
+    window._cardPopInPatched = true;
+
+    const origRenderRepos = window.renderRepos;
+    window.renderRepos = function (id, repos) {
+      origRenderRepos(id, repos);
+      setTimeout(animateCardsOnScroll, 0);
+    };
+
+    const origLoadItchGames = window.loadItchGames;
+    window.loadItchGames = async function () {
+      await origLoadItchGames();
+      setTimeout(animateCardsOnScroll, 0);
+    };
+  }
+
+  // Initial call for cards already in DOM + welcome screen fade out
+  window.addEventListener('DOMContentLoaded', () => {
+    animateCardsOnScroll();
+
+    // Make loading bar match text width
+    const text = document.querySelector('.welcome-text');
+    const bar = document.querySelector('.welcome-bar');
+    if (text && bar) {
+      const width = text.getBoundingClientRect().width;
+      bar.style.width = width + 'px';
+      bar.style.margin = '0 auto';
+    }
+
+    const welcome = document.getElementById('welcome-screen');
+    if (welcome) {
+      setTimeout(() => {
+        // punchy outro
+        welcome.classList.add('welcome-out');
+        // re-enable scroll
+        document.body.classList.remove('no-scroll');
+        // remove overlay after animation
+        setTimeout(() => {
+          if (welcome && welcome.parentNode) {
+            welcome.parentNode.removeChild(welcome);
+          }
+        }, 400); // match CSS transition
+      }, 3000); // 3s
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  });
+</script>
+
