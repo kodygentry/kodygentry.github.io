@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Generator - Kody Gentry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #141820 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .controls {
+            background: rgba(26, 31, 46, 0.95);
+            border: 2px solid #4a5a7f;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #38bdf8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(74, 90, 127, 0.2);
+            border: 2px solid #4a5a7f;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .slider-value {
+            min-width: 60px;
+            text-align: center;
+            color: #a855f7;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        input[type="range"] {
+            flex: 1;
+            padding: 0;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(74, 90, 127, 0.2);
+            color: #ffffff;
+            border: 2px solid #4a5a7f;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background: rgba(74, 90, 127, 0.4);
+            transform: translateY(-2px);
+        }
+        button.primary {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+        }
+        button.primary:hover {
+            background: rgba(56, 189, 248, 0.3);
+        }
+        .preview {
+            background: rgba(26, 31, 46, 0.95);
+            border: 2px solid #4a5a7f;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        canvas {
+            width: 100%;
+            border-radius: 0.5rem;
+            background: #000;
+            cursor: crosshair;
+        }
+        .info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(74, 90, 127, 0.2);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #c0c0c0;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            .control-row {
+                grid-template-columns: 1fr;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+        <h1>Noise Generator</h1>
+        
+        <div class="controls">
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="noiseType">Noise Type</label>
+                    <select id="noiseType">
+                        <option value="perlin">Perlin Noise</option>
+                        <option value="simplex">Simplex-like</option>
+                        <option value="cellular">Cellular (Worley)</option>
+                        <option value="fbm">Fractal Brownian Motion</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="colorMode">Color Mode</label>
+                    <select id="colorMode">
+                        <option value="grayscale">Grayscale</option>
+                        <option value="terrain">Terrain</option>
+                        <option value="heat">Heat Map</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="psychedelic">Psychedelic</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Scale: <span class="slider-value" id="scaleValue">50</span></label>
+                <div class="slider-container">
+                    <input type="range" id="scale" min="10" max="200" value="50">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Octaves: <span class="slider-value" id="octavesValue">4</span></label>
+                <div class="slider-container">
+                    <input type="range" id="octaves" min="1" max="8" value="4">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Persistence: <span class="slider-value" id="persistenceValue">0.5</span></label>
+                <div class="slider-container">
+                    <input type="range" id="persistence" min="0" max="1" step="0.1" value="0.5">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="primary" id="generateBtn">Generate</button>
+                <button id="randomBtn">Randomize</button>
+                <button id="downloadBtn">Download</button>
+            </div>
+            <div class="info">
+                💡 Click and drag on the canvas to pan. Use the sliders to adjust noise parameters. Great for procedural terrain, textures, and game worlds!
+            </div>
+        </div>
+
+        <div class="preview">
+            <canvas id="canvas" width="800" height="600"></canvas>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const noiseTypeSelect = document.getElementById('noiseType');
+        const colorModeSelect = document.getElementById('colorMode');
+        const scaleSlider = document.getElementById('scale');
+        const scaleValue = document.getElementById('scaleValue');
+        const octavesSlider = document.getElementById('octaves');
+        const octavesValue = document.getElementById('octavesValue');
+        const persistenceSlider = document.getElementById('persistence');
+        const persistenceValue = document.getElementById('persistenceValue');
+        const generateBtn = document.getElementById('generateBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let lastX, lastY;
+        let seed = Math.random() * 10000;
+
+        scaleSlider.addEventListener('input', () => {
+            scaleValue.textContent = scaleSlider.value;
+        });
+        octavesSlider.addEventListener('input', () => {
+            octavesValue.textContent = octavesSlider.value;
+        });
+        persistenceSlider.addEventListener('input', () => {
+            persistenceValue.textContent = persistenceSlider.value;
+        });
+
+        generateBtn.addEventListener('click', generateNoise);
+        randomBtn.addEventListener('click', randomize);
+        downloadBtn.addEventListener('click', downloadImage);
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                offsetX += (e.clientX - lastX) / 2;
+                offsetY += (e.clientY - lastY) / 2;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                generateNoise();
+            }
+        });
+        canvas.addEventListener('mouseup', () => isDragging = false);
+        canvas.addEventListener('mouseleave', () => isDragging = false);
+
+        function generateNoise() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.createImageData(width, height);
+            const data = imageData.data;
+
+            const scale = parseFloat(scaleSlider.value);
+            const octaves = parseInt(octavesSlider.value);
+            const persistence = parseFloat(persistenceSlider.value);
+            const noiseType = noiseTypeSelect.value;
+            const colorMode = colorModeSelect.value;
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    let value;
+                    const nx = (x + offsetX) / scale;
+                    const ny = (y + offsetY) / scale;
+
+                    switch (noiseType) {
+                        case 'perlin':
+                            value = perlinNoise(nx, ny, octaves, persistence);
+                            break;
+                        case 'simplex':
+                            value = simplexNoise(nx, ny, octaves, persistence);
+                            break;
+                        case 'cellular':
+                            value = cellularNoise(nx, ny);
+                            break;
+                        case 'fbm':
+                            value = fbm(nx, ny, octaves, persistence);
+                            break;
+                    }
+
+                    value = (value + 1) / 2; // Normalize to 0-1
+                    const color = getColor(value, colorMode);
+                    const i = (y * width + x) * 4;
+                    data[i] = color.r;
+                    data[i + 1] = color.g;
+                    data[i + 2] = color.b;
+                    data[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function perlinNoise(x, y, octaves, persistence) {
+            let total = 0;
+            let frequency = 1;
+            let amplitude = 1;
+            let maxValue = 0;
+
+            for (let i = 0; i < octaves; i++) {
+                total += noise(x * frequency + seed, y * frequency + seed) * amplitude;
+                maxValue += amplitude;
+                amplitude *= persistence;
+                frequency *= 2;
+            }
+
+            return total / maxValue;
+        }
+
+        function simplexNoise(x, y, octaves, persistence) {
+            return perlinNoise(x * 1.3, y * 1.3, octaves, persistence);
+        }
+
+        function fbm(x, y, octaves, persistence) {
+            let total = 0;
+            let frequency = 1;
+            let amplitude = 1;
+
+            for (let i = 0; i < octaves; i++) {
+                total += Math.abs(noise(x * frequency, y * frequency)) * amplitude;
+                amplitude *= persistence;
+                frequency *= 2;
+            }
+
+            return total * 2 - 1;
+        }
+
+        function cellularNoise(x, y) {
+            const cellSize = 2;
+            const cellX = Math.floor(x / cellSize);
+            const cellY = Math.floor(y / cellSize);
+
+            let minDist = Infinity;
+
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const pointX = (cellX + i) * cellSize + hash2D(cellX + i, cellY + j) * cellSize;
+                    const pointY = (cellY + j) * cellSize + hash2D(cellX + i + 100, cellY + j + 100) * cellSize;
+                    const dist = Math.sqrt((x - pointX) ** 2 + (y - pointY) ** 2);
+                    minDist = Math.min(minDist, dist);
+                }
+            }
+
+            return 1 - Math.min(minDist / cellSize, 1) * 2;
+        }
+
+        function noise(x, y) {
+            const X = Math.floor(x) & 255;
+            const Y = Math.floor(y) & 255;
+            x -= Math.floor(x);
+            y -= Math.floor(y);
+            const u = fade(x);
+            const v = fade(y);
+            const a = hash2D(X, Y);
+            const b = hash2D(X + 1, Y);
+            const c = hash2D(X, Y + 1);
+            const d = hash2D(X + 1, Y + 1);
+            return lerp(v, lerp(u, a, b), lerp(u, c, d));
+        }
+
+        function hash2D(x, y) {
+            const n = Math.sin(x * 12.9898 + y * 78.233 + seed) * 43758.5453;
+            return (n - Math.floor(n)) * 2 - 1;
+        }
+
+        function fade(t) {
+            return t * t * t * (t * (t * 6 - 15) + 10);
+        }
+
+        function lerp(t, a, b) {
+            return a + t * (b - a);
+        }
+
+        function getColor(value, mode) {
+            switch (mode) {
+                case 'grayscale':
+                    const gray = Math.floor(value * 255);
+                    return { r: gray, g: gray, b: gray };
+                case 'terrain':
+                    if (value < 0.3) return { r: 34, g: 139, b: 34 }; // dark green
+                    if (value < 0.5) return { r: 107, g: 142, b: 35 }; // olive
+                    if (value < 0.7) return { r: 160, g: 82, b: 45 }; // brown
+                    if (value < 0.85) return { r: 139, g: 137, b: 137 }; // gray
+                    return { r: 255, g: 255, b: 255 }; // white
+                case 'heat':
+                    if (value < 0.25) return { r: 0, g: 0, b: Math.floor(value * 4 * 255) };
+                    if (value < 0.5) return { r: 0, g: Math.floor((value - 0.25) * 4 * 255), b: 255 };
+                    if (value < 0.75) return { r: Math.floor((value - 0.5) * 4 * 255), g: 255, b: 255 - Math.floor((value - 0.5) * 4 * 255) };
+                    return { r: 255, g: 255 - Math.floor((value - 0.75) * 4 * 255), b: 0 };
+                case 'ocean':
+                    const blue = Math.floor(100 + value * 155);
+                    return { r: Math.floor(value * 50), g: Math.floor(value * 100), b: blue };
+                case 'psychedelic':
+                    return {
+                        r: Math.floor(Math.sin(value * Math.PI * 2) * 127 + 128),
+                        g: Math.floor(Math.sin(value * Math.PI * 2 + 2) * 127 + 128),
+                        b: Math.floor(Math.sin(value * Math.PI * 2 + 4) * 127 + 128)
+                    };
+                default:
+                    return { r: 0, g: 0, b: 0 };
+            }
+        }
+
+        function randomize() {
+            seed = Math.random() * 10000;
+            offsetX = Math.random() * 1000 - 500;
+            offsetY = Math.random() * 1000 - 500;
+            scaleSlider.value = Math.floor(Math.random() * 150) + 30;
+            scaleValue.textContent = scaleSlider.value;
+            octavesSlider.value = Math.floor(Math.random() * 6) + 2;
+            octavesValue.textContent = octavesSlider.value;
+            persistenceSlider.value = (Math.random() * 0.7 + 0.2).toFixed(1);
+            persistenceValue.textContent = persistenceSlider.value;
+            generateNoise();
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'noise-pattern.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Generate on load
+        generateNoise();
+    </script>
+</body>
+</html>

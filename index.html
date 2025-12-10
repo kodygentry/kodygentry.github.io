@@ -103,9 +103,7 @@
         letter-spacing: 0.4px;
         line-height: 1.6;
       }
-      body.no-scroll {
-        overflow: hidden;
-      }
+
       /* Dot-dither starfield */
       body::before {
         content: '';
@@ -343,9 +341,13 @@
         letter-spacing: 0.5px;
         text-transform: uppercase;
         font-size: 0.75rem;
+        background: rgba(15, 20, 25, 0.6);
+      }
+      .accordion summary:hover {
+        background: rgba(74, 90, 127, 0.2);
       }
       .accordion details[open] summary {
-        background: rgba(74, 90, 127, 0.08);
+        background: rgba(74, 90, 127, 0.25);
       }
       .accordion details summary::after {
         content: '\25be';
@@ -480,7 +482,7 @@
         color: #e5e7eb;
         overflow: hidden;
         opacity: 1;
-        transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.2, 1.6, 0.4, 1.1);
+        transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.2, 1.6, 0.4, 1.1);
       }
       #welcome-screen::before {
         content: '';
@@ -501,13 +503,15 @@
         animation: welcome-shell-pop 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
       }
       .welcome-text {
-        font-size: clamp(2.8rem, 9vw, 4rem);
-        letter-spacing: 0.4em;
+        font-size: clamp(1.8rem, 9vw, 4rem);
+        letter-spacing: clamp(0.2em, 1vw, 0.4em);
         text-transform: uppercase;
         text-align: center;
         color: #f9fafb;
         font-weight: 700;
         animation: welcome-text-flicker 3.6s ease-in-out 0.4s infinite;
+        padding: 0 1rem;
+        word-spacing: 100vw;
       }
       .welcome-bar {
         position: relative;
@@ -522,8 +526,10 @@
         inset: 0;
         transform-origin: left;
         transform: scaleX(0);
-        background: linear-gradient(90deg, #38bdf8, #a855f7, #f97316);
-        animation: welcome-bar-fill 3s ease-out forwards;
+        background: #38bdf8;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.6), 0 0 24px rgba(56, 189, 248, 0.3);
+        animation: welcome-bar-fill 2.8s cubic-bezier(0.65, 0, 0.35, 1) forwards, 
+                   welcome-bar-pulse 1.4s ease-in-out infinite;
       }
       #welcome-screen.welcome-out {
         opacity: 0;
@@ -568,6 +574,364 @@
           transform: scaleX(1);
         }
       }
+      @keyframes welcome-bar-pulse {
+        0%, 100% {
+          opacity: 1;
+          filter: brightness(1);
+        }
+        50% {
+          opacity: 0.7;
+          filter: brightness(1.3);
+        }
+      }
+      /* WIP Card Styles */
+      .wip-card {
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .wip-card::after {
+        content: '👁️ View Details';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(168, 85, 240, 0.9);
+        color: white;
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+      }
+      .wip-card:hover::after {
+        transform: translateY(0);
+      }
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 1000;
+        padding: 2rem;
+        overflow-y: auto;
+      }
+      .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      @media (max-width: 768px) {
+        .modal {
+          padding: 1rem;
+          align-items: flex-start;
+        }
+        .modal.active {
+          align-items: flex-start;
+          padding-top: 2rem;
+        }
+        .modal-content {
+          margin: auto;
+          width: 100%;
+          max-width: 95%;
+        }
+      }
+      .modal-content {
+        background: rgba(26, 31, 46, 0.98);
+        border: 2px solid #4a5a7f;
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 107, 107, 0.2);
+        border: 2px solid #ff6b6b;
+        color: #ff6b6b;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+      .modal-close:hover {
+        background: rgba(255, 107, 107, 0.3);
+        transform: rotate(90deg);
+      }
+      .modal-title {
+        color: #38bdf8;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .modal-timeframe {
+        color: #a855f7;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .modal-description {
+        color: #c0c0c0;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+      /* Carousel Styles */
+      .carousel {
+        position: relative;
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+      .carousel-container {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        border: 2px solid #4a5a7f;
+        background: rgba(15, 20, 25, 0.5);
+      }
+      .carousel-track {
+        display: flex;
+        transition: transform 0.3s ease;
+      }
+      .carousel-slide {
+        min-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .carousel-slide img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+      }
+      .carousel-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .carousel-btn {
+        background: rgba(56, 189, 248, 0.2);
+        border: 2px solid #38bdf8;
+        color: #38bdf8;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+      }
+      .carousel-btn:hover {
+        background: rgba(56, 189, 248, 0.3);
+        transform: translateY(-2px);
+      }
+      .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(74, 90, 127, 0.5);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .carousel-dot.active {
+        background: #38bdf8;
+        transform: scale(1.3);
+      }
+      /* Art Gallery Styles */
+      .art-section {
+        margin-bottom: 2rem;
+      }
+      .art-card {
+        background: rgba(26, 31, 46, 0.6);
+        border: 2px solid #4a5a7f;
+        border-radius: 1rem;
+        padding: 0;
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+      .art-card:hover {
+        transform: translateY(-5px);
+        border-color: #38bdf8;
+        box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2);
+      }
+      .art-card-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        background: rgba(15, 20, 25, 0.5);
+      }
+      .art-card-content {
+        padding: 1rem;
+      }
+      .art-card-title {
+        color: #38bdf8;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .art-card-description {
+        color: #c0c0c0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+      .sketchfab-embed {
+        width: 100%;
+        height: 300px;
+        border: none;
+        border-radius: 0.5rem;
+      }
+      .art-card.no-glow:hover::before {
+        opacity: 0 !important;
+        animation: none !important;
+      }
+      /* Image Zoom Modal */
+      .image-zoom-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 2000;
+        cursor: zoom-out;
+        animation: fadeIn 0.2s;
+      }
+      .image-zoom-modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .image-zoom-modal img,
+      .image-zoom-modal video {
+        max-width: 95%;
+        max-height: 95%;
+        object-fit: contain;
+        border-radius: 0.5rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      /* Mobile responsive styles */
+      @media (max-width: 768px) {
+        .hero-card {
+          padding: 1.5rem 1rem;
+          margin: 0 auto 1.5rem;
+          border-radius: 1rem;
+        }
+        .hero-icons {
+          gap: 0.75rem;
+          margin-bottom: 0.75rem;
+        }
+        .hero-icons div {
+          width: 2rem;
+          height: 2rem;
+        }
+        .hero-icons div i {
+          font-size: 1rem !important;
+        }
+        .hero-card h1 {
+          font-size: clamp(2rem, 8vw, 3rem);
+          margin-bottom: 0.25rem;
+        }
+        .hero-card p {
+          font-size: 0.75rem;
+          margin-top: 0.25rem;
+        }
+        .hero-links {
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+        .hero-links a {
+          padding: 0.4rem 1rem;
+          font-size: 0.7rem;
+        }
+        .welcome-shell {
+          padding: 0 1rem;
+        }
+        .welcome-bar {
+          max-width: 90vw;
+          min-width: 200px;
+        }
+      }
+      @media (max-width: 480px) {
+        .hero-card {
+          padding: 1rem;
+          margin: 0 auto 1rem;
+        }
+        .hero-icons {
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+        .hero-icons div {
+          width: 1.75rem;
+          height: 1.75rem;
+        }
+        .hero-icons div i {
+          font-size: 0.9rem !important;
+        }
+        .hero-card h1 {
+          font-size: clamp(1.5rem, 6vw, 2.2rem);
+          margin-bottom: 0.2rem;
+          letter-spacing: -0.5px;
+        }
+        .hero-card p {
+          font-size: 0.7rem;
+          margin-top: 0.15rem;
+          letter-spacing: 0.3px;
+        }
+        .hero-links {
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-top: 0.75rem;
+        }
+        .hero-links a {
+          width: 100%;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.65rem;
+          text-align: center;
+        }
+        .welcome-text {
+          font-size: clamp(1.5rem, 7vw, 2.5rem);
+          letter-spacing: clamp(0.15em, 0.8vw, 0.3em);
+        }
+        .welcome-bar {
+          max-width: 80vw;
+          min-width: 150px;
+          height: 2px;
+        }
+        body {
+          padding: 0;
+        }
+      }
     </style>
   </head>
   <body class="no-scroll">
@@ -599,8 +963,8 @@
         <p>Founder of Chum Studios</p>
         <div class="hero-links">
           <a href="https://github.com/kodygentry" target="_blank" rel="noopener">GitHub</a>
-          <a href="mailto:kodygentry3737@gmail.com">Email</a>
-          <a href="static/assets/KodyGentryResume.pdf" download>Resume</a>
+          <a href="#" id="emailBtn" onclick="copyEmail(event)">Email</a>
+          <a href="static/assets/icons/KodyGentryResume.pdf" download>Resume</a>
         </div>
       </section>
       <!-- Tabs bar -->
@@ -619,6 +983,53 @@
       >
         <div class="accordion">
           <details>
+            <summary>Interactive Demos</summary>
+            <div class="card-grid">
+              <div class="project-card">
+                <h3>Tic Tac Toe</h3>
+                <p>Classic game with AI opponent using Minimax algorithm. Play against an unbeatable computer opponent.</p>
+                <div class="project-meta">
+                  <a href="demos/tictactoe.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+              <div class="project-card">
+                <h3>Dice Roller with Distribution</h3>
+                <p>Roll virtual dice and visualize probability distributions. Supports multiple dice types (d4, d6, d8, d12, d20).</p>
+                <div class="project-meta">
+                  <a href="demos/dice-roller.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+              <div class="project-card">
+                <h3>Dither Generator Tool</h3>
+                <p>Apply retro dithering effects to images. Explore different dithering algorithms for pixel art aesthetics.</p>
+                <div class="project-meta">
+                  <a href="demos/dither.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+              <div class="project-card">
+                <h3>Noise Generator</h3>
+                <p>Generate Perlin and Simplex noise patterns for procedural generation. Essential for game development and terrain creation.</p>
+                <div class="project-meta">
+                  <a href="demos/noise.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+              <div class="project-card">
+                <h3>Random Art Inspo Generator</h3>
+                <p>Get creative prompts and art inspiration. Generates random themes, color schemes, and style combinations.</p>
+                <div class="project-meta">
+                  <a href="demos/art-inspo.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+              <div class="project-card">
+                <h3>Color Palette Generator</h3>
+                <p>Generate harmonious color palettes from a base color. Creates complementary, triadic, and analogous schemes.</p>
+                <div class="project-meta">
+                  <a href="demos/color-palette.html" class="demo-button">Launch Demo</a>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details>
             <summary>Side projects</summary>
             <div class="card-grid" id="side-projects"></div>
           </details>
@@ -633,48 +1044,54 @@
         </div>
       </section>
       <section id="content-games" class="tab-content" aria-labelledby="tab-games">
-        <div class="card-grid" id="game-cards"></div>
+        <div class="accordion">
+          <details id="released-games">
+            <summary>Released Games</summary>
+            <div class="card-grid" id="game-cards"></div>
+          </details>
+          
+          <details id="wip">
+            <summary>Work in Progress / Abandoned Games</summary>
+            <div class="card-grid" id="wip-cards">
+              <!-- WIP cards will be generated here -->
+            </div>
+          </details>
+        </div>
+
+        <!-- WIP Modal -->
+        <div id="wip-modal" class="modal">
+          <div class="modal-content">
+            <div class="modal-close" onclick="closeWIPModal()">×</div>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-timeframe" id="modal-timeframe"></div>
+            <p class="modal-description" id="modal-description"></p>
+            <div class="carousel">
+              <div class="carousel-container">
+                <div class="carousel-track" id="carousel-track"></div>
+              </div>
+              <div class="carousel-controls">
+                <button class="carousel-btn" onclick="prevSlide()">← Previous</button>
+                <button class="carousel-btn" onclick="nextSlide()">Next →</button>
+              </div>
+              <div class="carousel-indicators" id="carousel-indicators"></div>
+            </div>
+          </div>
+        </div>
       </section>
       <section id="content-art" class="tab-content" aria-labelledby="tab-art">
-        <div class="game-card">
-          <h3>3D Props &amp; Environments</h3>
-          <p>Assorted low-poly props and moody environment studies.</p>
-          <strong>Work in progress!</strong>
-          <p class="project-meta"><span>Tools:</span> Blender, Game Art</p>
-        </div>
-        <div class="card-grid" style="margin-top: 1.2rem">
-          <div class="game-card">
-            <img
-              src="static/assets/img.png"
-              alt="Chum Studios"
-              style="
-                width: 100%;
-                height: 160px;
-                object-fit: contain;
-                border-radius: 0.5rem;
-                margin-bottom: 0.5rem;
-                background: #2a3347;
-              "
-            />
-            <h3>Chum Studios</h3>
-            <p>Studio logo and branding.</p>
-          </div>
-          <div class="game-card">
-            <img
-              src="static/assets/seths_logo.png"
-              alt="Fan Art - Seth's Logo"
-              style="
-                width: 100%;
-                height: 160px;
-                object-fit: contain;
-                border-radius: 0.5rem;
-                margin-bottom: 0.5rem;
-                background: #2a3347;
-              "
-            />
-            <h3>Seth's Logo</h3>
-            <p>Alternate Chum Studios Logo</p>
-          </div>
+        <div class="accordion">
+          <details id="3d-models">
+            <summary>3D Models & Renders</summary>
+            <div class="card-grid" id="art-3d-models"></div>
+          </details>
+          <details>
+            <summary>Traditional Art & Sketches</summary>
+            <div class="card-grid" id="art-traditional"></div>
+          </details>
+          <details>
+            <summary>Digital Art & Logos</summary>
+            <div class="card-grid" id="art-digital"></div>
+          </details>
         </div>
       </section>
     </main>
@@ -690,7 +1107,43 @@
     >
       © <script>document.write(new Date().getFullYear());</script> Kody Gentry · Chum Studios
     </footer>
+
+    <!-- Modal for WIP Project Details -->
+    <div id="wip-modal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeWIPModal()">&times;</button>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-timeframe" id="modal-timeframe"></div>
+        <p class="modal-description" id="modal-description"></p>
+        
+        <div class="carousel">
+          <div class="carousel-container">
+            <div class="carousel-track" id="carousel-track"></div>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-btn" onclick="prevSlide()">← Previous</button>
+            <button class="carousel-btn" onclick="nextSlide()">Next →</button>
+          </div>
+          <div class="carousel-indicators" id="carousel-indicators"></div>
+        </div>
+      </div>
+    </div>
+
     <script>
+      // Copy email to clipboard
+      function copyEmail(event) {
+        event.preventDefault();
+        const email = 'kodygentry3737@gmail.com';
+        navigator.clipboard.writeText(email).then(() => {
+          const btn = document.getElementById('emailBtn');
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.textContent = originalText;
+          }, 2000);
+        });
+      }
+
       // Tab switching logic with smooth animations
       document.querySelectorAll('.tabs button').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -855,77 +1308,55 @@
           {
             url: 'https://chumstudios.itch.io/midnight-slice-demo',
             title: 'Midnight Slice Demo',
-            description: 'A retro horror slice-em-up. Survive the night and slice the monsters!'
+            description: 'You are working the night shift at the pizza shop but things are ... off. Can you survive until your boss comes back from vacation?',
+            coverUrl: 'https://img.itch.zone/aW1nLzE4NjI2Mzk4LmdpZg==/original/qGkdkc.gif'
           },
           {
             url: 'https://chumstudios.itch.io/eternal-burn',
             title: 'Eternal Burn',
-            description: 'A fast-paced endless runner with a fiery twist.'
+            description: 'A fast-paced endless runner with a fiery twist.',
+            coverUrl: 'https://img.itch.zone/aW1nLzE3Mjg0NDA4LmdpZg==/original/8Uw%2Fwu.gif'
           }
         ];
         const container = document.getElementById('game-cards');
         container.innerHTML = '';
         for (const game of games) {
-          try {
-            const res = await fetch(
-              'https://itch.io/oembed?url=' + encodeURIComponent(game.url)
-            );
-            let data = {};
-            if (res.ok) {
-              data = await res.json();
-            }
-            const div = document.createElement('div');
-            div.className = 'game-card';
-            let imgHtml = '';
-            if (data.thumbnail_url) {
-              imgHtml = `
-                <img
-                  src="${data.thumbnail_url}"
-                  alt="${game.title} cover"
-                  style="
-                    width: 100%;
-                    height: 120px;
-                    object-fit: cover;
-                    border-radius: 0.5rem;
-                    margin-bottom: 0.5rem;
-                  "
-                  onerror="this.onerror=null;this.outerHTML=window.fallbackControllerSVG;"
-                />`;
-            } else {
-              imgHtml = window.fallbackControllerSVG;
-            }
-            div.innerHTML = `
-              <h3>${game.title}</h3>
-              <p>${game.description}</p>
-              ${imgHtml}
-              <a
-                href="${game.url}"
-                target="_blank"
-                rel="noopener"
-                style="color:#c97755;text-decoration:underline;font-size:0.85rem;"
-              >
-                Play
-              </a>
-            `;
-            container.appendChild(div);
-          } catch (err) {
-            const div = document.createElement('div');
-            div.className = 'game-card';
-            div.innerHTML = `
-              <h3>${game.title}</h3>
-              <p>${game.description}</p>
-              ${window.fallbackControllerSVG}
-              <a
-                href="${game.url}"
-                target="_blank"
-                rel="noopener"
-                style="color:#a8bce0;text-decoration:underline;font-size:0.85rem;"
-              >
-                Play
-              </a>
-            `;
-            container.appendChild(div);
+          const div = document.createElement('div');
+          div.className = 'game-card';
+          
+          let imgHtml = '';
+          if (game.coverUrl) {
+            imgHtml = `
+              <img
+                src="${game.coverUrl}"
+                alt="${game.title} cover"
+                style="
+                  width: 100%;
+                  height: 120px;
+                  object-fit: cover;
+                  border-radius: 0.5rem;
+                  margin-bottom: 0.5rem;
+                "
+                onerror="this.onerror=null;this.outerHTML=window.fallbackControllerSVG;"
+              />`;
+          } else {
+            imgHtml = window.fallbackControllerSVG;
           }
+          
+          div.innerHTML = `
+            ${imgHtml}
+            <h3>${game.title}</h3>
+            <p>${game.description}</p>
+            <a
+              href="${game.url}"
+              target="_blank"
+              rel="noopener"
+              style="color:#38bdf8;text-decoration:underline;font-size:0.85rem;"
+            >
+              Play on itch.io
+            </a>
+          `;
+          container.appendChild(div);
         }
         // Fallback SVG for controller icon
         if (!window.fallbackControllerSVG) {
@@ -953,9 +1384,465 @@
             </svg>`;
         }
       }
+
+      // WIP Projects Data
+      const wipProjects = [
+        {
+          id: 'project0',
+          title: 'KOMA',
+          timeframe: '2025 - In Progress',
+          description: 'Godot - 3D orthagonal platform puzzler with unique dot-dither effects. Players navigate through levels by manipulating perspective and solving spatial puzzles using a combination of platforming skills and environmental interactions.',
+          media: [
+            'static/assets/wip/project0/intro.gif',
+            'static/assets/wip/project0/shader.gif',
+            'static/assets/wip/project0/level.png',
+            'static/assets/wip/project0/gameplay.gif',
+            'https://youtu.be/Uou0grxS5SY?si=p4qGNQJ0-BFm_jan'
+          ]
+        },
+        {
+          id: 'project1',
+          title: 'Handgun',
+          timeframe: '2025 - Abandoned',
+          description: 'Unreal Engine 5 - FPS shooter with real hands and appendage based enemies. Players navigate through levels using realistic hand movements to shoot, grab, and interact with the environment. Featured physics-based puzzles and combat.',
+          media: [
+            'static/assets/wip/project1/pic0.png',
+            'static/assets/wip/project1/pic1.png',
+            'static/assets/wip/project1/pic2.png',
+            'static/assets/wip/project1/gameplay.gif'
+          ]
+        },
+        {
+          id: 'project2',
+          title: 'Threadblade',
+          timeframe: '2024 - Abandoned',
+          description: 'Unity - 2D pixel-platformer with thread-based attack mechanics. Players control a character who can shoot and manipulate threads to swing, bind enemies, and solve environmental puzzles.',
+          media: [
+            'static/assets/wip/project2/gameplay1.gif',
+            'static/assets/wip/project2/pic0.png',
+            'static/assets/wip/project2/gameplay.gif',
+            'static/assets/wip/project2/pic1.png'
+          ]
+        },
+        {
+          id: 'project3',
+          title: 'Room 444',
+          timeframe: '2024 - Abandoned',
+          description: 'Unreal Engine 5 - 3D realistic puzzle game set in a strange, bare, sterile labrinth. Players must solve environmental puzzles using unique mechanics involving light, shadow, and perspective to escape each room and uncover the story behind Room 444.',
+          media: [
+            'static/assets/wip/project3/pic0.png',
+            'static/assets/wip/project3/pic1.png',
+            'static/assets/wip/project3/gif0.gif',
+            'static/assets/wip/project3/gif1.gif',
+            'static/assets/wip/project3/gif2.gif',
+            'static/assets/wip/project3/gif3.gif',
+            'static/assets/wip/project3/pic.png'
+          ]
+        },
+        {
+          id: 'project4',
+          title: 'Pixel Rift',
+          timeframe: '2024 - Abandoned',
+          description: 'Unity - 2D sci-fi rogue-like where players explore procedurally generated space stations. Features pixel art graphics, permadeath, and a variety of weapons and upgrades to survive alien threats.',
+          media: [
+            'static/assets/wip/project4/gif0.gif',
+            'static/assets/wip/project4/pic1.png',
+            'static/assets/wip/project4/gif1.gif',
+            'static/assets/wip/project4/gif2.gif'
+          ]
+        },
+        {
+          id: 'project5',
+          title: 'Egg Battles',
+          timeframe: '2023 - Abandoned',
+          description: 'Unity - 3D FPS battle with egg enemies that crack and splatter when shot. Players compete in fast-paced matches using a variety of egg-themed weapons and power-ups.',
+          media: [
+            'static/assets/wip/project5/gif0.gif',
+            'static/assets/wip/project5/pic.png',
+            'static/assets/wip/project5/gif1.gif',
+            'static/assets/wip/project5/gif2.gif'
+          ]
+        }
+      ];
+
+      function loadWIPProjects() {
+        const container = document.getElementById('wip-cards');
+        container.innerHTML = '';
+        
+        wipProjects.forEach(project => {
+          const card = document.createElement('div');
+          card.className = 'game-card wip-card';
+          card.onclick = () => openWIPModal(project);
+          
+          const statusBadge = project.timeframe.includes('Progress') 
+            ? '<span style="color: #38bdf8;">🔨 WIP</span>' 
+            : '<span style="color: #ff6b6b;">⚠️ Abandoned</span>';
+          
+          card.innerHTML = `
+            <h3>${project.title}</h3>
+            <p style="font-size: 0.8rem; color: #a855f7; margin-bottom: 0.5rem;">${project.timeframe}</p>
+            <p>${project.description.substring(0, 100)}...</p>
+            ${statusBadge}
+          `;
+          
+          container.appendChild(card);
+        });
+      }
+
+      let currentSlide = 0;
+      let currentProject = null;
+
+      function openWIPModal(project) {
+        currentProject = project;
+        currentSlide = 0;
+        
+        document.getElementById('modal-title').textContent = project.title;
+        document.getElementById('modal-timeframe').textContent = project.timeframe;
+        document.getElementById('modal-description').textContent = project.description;
+        
+        // Setup carousel
+        const track = document.getElementById('carousel-track');
+        track.innerHTML = '';
+        
+        project.media.forEach((mediaUrl, index) => {
+          const slide = document.createElement('div');
+          slide.className = 'carousel-slide';
+          
+          // Check if URL is a YouTube link
+          if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
+            // Create clickable YouTube preview
+            const youtubeLink = document.createElement('div');
+            youtubeLink.style.cssText = `
+              width: 100%;
+              height: 450px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              background: linear-gradient(135deg, #1a1f2e 0%, #2a3347 100%);
+              border-radius: 0.5rem;
+              cursor: pointer;
+              transition: all 0.3s;
+              gap: 1rem;
+              border: 2px solid #4a5a7f;
+            `;
+            
+            youtubeLink.innerHTML = `
+              <div style="font-size: 4rem; color: #ff0000;">▶️</div>
+              <div style="font-size: 1.5rem; color: #38bdf8; font-weight: 600;">Watch on YouTube</div>
+              <div style="font-size: 0.9rem; color: #a855f7;">Click to open video</div>
+            `;
+            
+            youtubeLink.addEventListener('mouseenter', () => {
+              youtubeLink.style.background = 'linear-gradient(135deg, #2a3347 0%, #3a4357 100%)';
+              youtubeLink.style.transform = 'scale(1.02)';
+            });
+            
+            youtubeLink.addEventListener('mouseleave', () => {
+              youtubeLink.style.background = 'linear-gradient(135deg, #1a1f2e 0%, #2a3347 100%)';
+              youtubeLink.style.transform = 'scale(1)';
+            });
+            
+            youtubeLink.addEventListener('click', () => {
+              window.open(mediaUrl, '_blank');
+            });
+            
+            slide.appendChild(youtubeLink);
+          } else {
+            // Regular image
+            const img = document.createElement('img');
+            img.src = mediaUrl;
+            img.alt = `${project.title} media ${index + 1}`;
+            img.onerror = function() {
+              this.style.display = 'none';
+              const placeholder = document.createElement('div');
+              placeholder.style.cssText = `
+                width: 100%;
+                height: 400px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(26, 31, 46, 0.8);
+                color: #888;
+                font-size: 1.2rem;
+                flex-direction: column;
+                gap: 1rem;
+              `;
+              placeholder.innerHTML = `
+                <div style="font-size: 3rem;">🖼️</div>
+                <div>Image not found</div>
+                <div style="font-size: 0.9rem; color: #666;">${mediaUrl.split('/').pop()}</div>
+              `;
+              this.parentElement.appendChild(placeholder);
+            };
+            slide.appendChild(img);
+          }
+          
+          track.appendChild(slide);
+        });
+        
+        // Setup indicators
+        const indicators = document.getElementById('carousel-indicators');
+        indicators.innerHTML = '';
+        project.media.forEach((_, index) => {
+          const dot = document.createElement('div');
+          dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
+          dot.onclick = () => goToSlide(index);
+          indicators.appendChild(dot);
+        });
+        
+        document.getElementById('wip-modal').classList.add('active');
+      }
+
+      function closeWIPModal() {
+        document.getElementById('wip-modal').classList.remove('active');
+      }
+
+      function nextSlide() {
+        if (currentProject && currentSlide < currentProject.media.length - 1) {
+          currentSlide++;
+          updateCarousel();
+        }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 0) {
+          currentSlide--;
+          updateCarousel();
+        }
+      }
+
+      function goToSlide(index) {
+        currentSlide = index;
+        updateCarousel();
+      }
+
+      function updateCarousel() {
+        const track = document.getElementById('carousel-track');
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update indicators
+        document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentSlide);
+        });
+      }
+
+      // Close modal on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeWIPModal();
+      });
+
+      // Close modal on background click
+      document.getElementById('wip-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'wip-modal') closeWIPModal();
+      });
+
+      // Art Gallery Data
+      const artData = {
+        models3D: [
+          {
+            title: 'Archie Plushie',
+            description: 'Cat doll with soft fabric textures',
+            type: 'sketchfab',
+            sketchfabId: '5f919fd8bdd7434a8b1c36b826b0fbc3',
+            image: 'static/assets/art/3d/cat-plushie-preview.png'
+          },
+          {
+            title: 'Monch',
+            description: 'Monch with hair textures',
+            type: 'sketchfab',
+            sketchfabId: '47d44495899a46a08e09f9019bf816d8',
+            image: 'static/assets/art/3d/cat-plushie-preview.png'
+          },
+          {
+            title: 'Cat Castle',
+            description: 'Low poly castle with cats',
+            type: 'sketchfab',
+            sketchfabId: '2ca6e6aa7bad4025a6343187cee3ae57',
+            image: 'static/assets/art/3d/cat.png'
+          },
+          {
+            title: 'Handgun',
+            description: 'Gun made with hands ',
+            type: 'sketchfab',
+            sketchfabId: '8553179724404307b02b7e24e384f78e',
+            image: 'static/assets/art/3d/cat-plushie-preview.png'
+          }
+        ],
+        traditional: ['cat.jpg','juno.jpg', 'man.jpg', 'hxh.jpg'],
+        digital: {
+          videos: ['0.mp4', '1.mp4'],
+          gifs: ['1.gif', '2.gif'],
+          images: ['0.png', '1.png', '01.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png']
+        }
+      };
+
+      function loadArtGallery() {
+        // Load 3D Models
+        const models3DContainer = document.getElementById('art-3d-models');
+        artData.models3D.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'game-card art-card no-glow';
+          
+          if (item.type === 'sketchfab' && item.sketchfabId) {
+            card.innerHTML = `
+              <iframe 
+                class="sketchfab-embed" 
+                src="https://sketchfab.com/models/${item.sketchfabId}/embed?autostart=0&ui_theme=dark" 
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+              ></iframe>
+              <div class="art-card-content">
+                <div class="art-card-title">${item.title}</div>
+                <div class="art-card-description">${item.description}</div>
+                <a href="https://sketchfab.com/3d-models/${item.sketchfabId}" target="_blank" style="color: #38bdf8; font-size: 0.85rem; text-decoration: underline; margin-top: 0.5rem; display: inline-block;">View on Sketchfab</a>
+              </div>
+            `;
+            card.style.cursor = 'default';
+          } else {
+            card.innerHTML = `
+              <img src="${item.image}" alt="${item.title}" class="art-card-image" onerror="this.src='https://placehold.co/600x400/1a1f2e/38bdf8?text=${encodeURIComponent(item.title)}'">
+              <div class="art-card-content">
+                <div class="art-card-title">${item.title}</div>
+                <div class="art-card-description">${item.description}</div>
+              </div>
+            `;
+          }
+          
+          models3DContainer.appendChild(card);
+        });
+
+        // Load Traditional Art
+        loadTraditionalArt();
+
+        // Load Digital Art
+        loadDigitalArt();
+      }
+
+      function loadTraditionalArt() {
+        const traditionalContainer = document.getElementById('art-traditional');
+        const folderPath = 'static/assets/art/traditional/';
+        const files = artData.traditional;
+        
+        if (!files || files.length === 0) return;
+        
+        const galleryGrid = document.createElement('div');
+        galleryGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;';
+        
+        files.forEach(file => {
+          const imgWrapper = document.createElement('div');
+          imgWrapper.style.cssText = 'position: relative; width: 100%; background: #0f1419; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; border: 2px solid #4a5a7f; aspect-ratio: 1;';
+          
+          const img = document.createElement('img');
+          img.src = folderPath + file;
+          img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+          img.alt = file;
+          
+          imgWrapper.appendChild(img);
+          imgWrapper.onmouseenter = () => imgWrapper.style.transform = 'scale(1.02)';
+          imgWrapper.onmouseleave = () => imgWrapper.style.transform = 'scale(1)';
+          imgWrapper.onclick = () => zoomImage(folderPath + file);
+          
+          galleryGrid.appendChild(imgWrapper);
+        });
+        
+        traditionalContainer.appendChild(galleryGrid);
+      }
+
+      function loadDigitalArt() {
+        const digitalContainer = document.getElementById('art-digital');
+        const folderPath = 'static/assets/art/digital/';
+        const { videos, gifs, images } = artData.digital;
+        
+        // Combine all files into one array with type info
+        const allFiles = [];
+        if (videos) videos.forEach(file => allFiles.push({ file, type: 'video' }));
+        if (gifs) gifs.forEach(file => allFiles.push({ file, type: 'gif' }));
+        if (images) images.forEach(file => allFiles.push({ file, type: 'image' }));
+        
+        // Create single grid for all media
+        const mediaGrid = document.createElement('div');
+        mediaGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;';
+        
+        allFiles.forEach(({ file, type }) => {
+          const wrapper = document.createElement('div');
+          wrapper.style.cssText = 'position: relative; width: 100%; background: #0f1419; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; border: 2px solid #4a5a7f; aspect-ratio: 1;';
+          
+          if (type === 'video') {
+            const video = document.createElement('video');
+            video.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+            video.loop = true;
+            video.muted = true;
+            video.autoplay = true;
+            video.playsInline = true;
+            video.preload = 'metadata';
+            
+            const source = document.createElement('source');
+            source.src = folderPath + file;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            
+            wrapper.appendChild(video);
+            wrapper.onclick = () => zoomImage(folderPath + file, true);
+          } else {
+            const img = document.createElement('img');
+            img.src = folderPath + file;
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+            img.alt = file;
+            
+            wrapper.appendChild(img);
+            wrapper.onclick = () => zoomImage(folderPath + file);
+          }
+          
+          wrapper.onmouseenter = () => wrapper.style.transform = 'scale(1.02)';
+          wrapper.onmouseleave = () => wrapper.style.transform = 'scale(1)';
+          
+          mediaGrid.appendChild(wrapper);
+        });
+        
+        digitalContainer.appendChild(mediaGrid);
+      }
+
+      // Zoom image modal
+      function zoomImage(src, isVideo = false) {
+        const modal = document.createElement('div');
+        modal.className = 'image-zoom-modal active';
+        
+        if (isVideo) {
+          const video = document.createElement('video');
+          video.src = src;
+          video.controls = true;
+          video.autoplay = true;
+          video.style.cssText = 'max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 0.5rem;';
+          modal.appendChild(video);
+        } else {
+          const img = document.createElement('img');
+          img.src = src;
+          modal.appendChild(img);
+        }
+        
+        modal.onclick = () => {
+          modal.classList.remove('active');
+          setTimeout(() => modal.remove(), 200);
+        };
+        
+        document.body.appendChild(modal);
+        
+        // ESC key to close
+        const escHandler = (e) => {
+          if (e.key === 'Escape') {
+            modal.classList.remove('active');
+            setTimeout(() => modal.remove(), 200);
+            document.removeEventListener('keydown', escHandler);
+          }
+        };
+        document.addEventListener('keydown', escHandler);
+      }
+
       // Initiate data fetches on page load
       loadGithubRepos();
       loadItchGames();
+      loadWIPProjects();
+      loadArtGallery();
     </script>
     <script>
   // Animate cards as they enter the viewport
@@ -1008,19 +1895,31 @@
     }
 
     const welcome = document.getElementById('welcome-screen');
+    const hasVisited = sessionStorage.getItem('hasVisited');
+    
     if (welcome) {
-      setTimeout(() => {
-        // punchy outro
-        welcome.classList.add('welcome-out');
-        // re-enable scroll
+      if (hasVisited) {
+        // Skip welcome screen on return visits
+        welcome.style.display = 'none';
         document.body.classList.remove('no-scroll');
-        // remove overlay after animation
+      } else {
+        // Show welcome screen on first visit
+        sessionStorage.setItem('hasVisited', 'true');
         setTimeout(() => {
-          if (welcome && welcome.parentNode) {
-            welcome.parentNode.removeChild(welcome);
-          }
-        }, 400); // match CSS transition
-      }, 3000); // 3s
+          // smooth fade-out
+          welcome.classList.add('welcome-out');
+          // re-enable scroll after fade starts
+          setTimeout(() => {
+            document.body.classList.remove('no-scroll');
+          }, 300);
+          // remove overlay after animation completes
+          setTimeout(() => {
+            if (welcome && welcome.parentNode) {
+              welcome.parentNode.removeChild(welcome);
+            }
+          }, 700); // match CSS transition
+        }, 3200); // wait for loading bar to complete
+      }
     } else {
       document.body.classList.remove('no-scroll');
     }

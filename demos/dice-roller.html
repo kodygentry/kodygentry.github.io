@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller - Kody Gentry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #141820 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .controls {
+            background: rgba(26, 31, 46, 0.95);
+            border: 2px solid #4a5a7f;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #38bdf8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(74, 90, 127, 0.2);
+            border: 2px solid #4a5a7f;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(74, 90, 127, 0.2);
+            color: #ffffff;
+            border: 2px solid #4a5a7f;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background: rgba(74, 90, 127, 0.4);
+            transform: translateY(-2px);
+        }
+        button.primary {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+        }
+        button.primary:hover {
+            background: rgba(56, 189, 248, 0.3);
+        }
+        .results {
+            background: rgba(26, 31, 46, 0.95);
+            border: 2px solid #4a5a7f;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .result-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .total {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+        }
+        .rolls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .die {
+            width: 60px;
+            height: 60px;
+            background: rgba(74, 90, 127, 0.3);
+            border: 2px solid #4a5a7f;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            animation: roll 0.5s ease-out;
+        }
+        @keyframes roll {
+            0% { transform: rotate(0deg) scale(0.5); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .chart-container {
+            margin-top: 2rem;
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #a855f7;
+            font-weight: 600;
+        }
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: block;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .stat-card {
+            background: rgba(74, 90, 127, 0.2);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #4a5a7f;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #c0c0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-top: 0.25rem;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+        <h1>Dice Roller</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="diceType">Dice Type</label>
+                <select id="diceType">
+                    <option value="4">d4 (4-sided)</option>
+                    <option value="6" selected>d6 (6-sided)</option>
+                    <option value="8">d8 (8-sided)</option>
+                    <option value="10">d10 (10-sided)</option>
+                    <option value="12">d12 (12-sided)</option>
+                    <option value="20">d20 (20-sided)</option>
+                    <option value="100">d100 (100-sided)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="numDice">Number of Dice (1-10)</label>
+                <input type="number" id="numDice" min="1" max="10" value="2">
+            </div>
+            <div class="buttons">
+                <button class="primary" id="rollBtn">Roll Dice</button>
+                <button id="clearBtn">Clear History</button>
+            </div>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <div class="result-display">
+                <div class="total" id="total">0</div>
+                <div id="rollsContainer" class="rolls"></div>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Rolls</div>
+                    <div class="stat-value" id="totalRolls">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average</div>
+                    <div class="stat-value" id="average">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Highest</div>
+                    <div class="stat-value" id="highest">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Lowest</div>
+                    <div class="stat-value" id="lowest">0</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Distribution</div>
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+
+    <script>
+        const diceTypeSelect = document.getElementById('diceType');
+        const numDiceInput = document.getElementById('numDice');
+        const rollBtn = document.getElementById('rollBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const results = document.getElementById('results');
+        const totalDisplay = document.getElementById('total');
+        const rollsContainer = document.getElementById('rollsContainer');
+        const canvas = document.getElementById('chart');
+        const ctx = canvas.getContext('2d');
+
+        let history = {};
+        let stats = { total: 0, count: 0, highest: 0, lowest: Infinity };
+
+        rollBtn.addEventListener('click', rollDice);
+        clearBtn.addEventListener('click', clearHistory);
+
+        function rollDice() {
+            const diceType = parseInt(diceTypeSelect.value);
+            const numDice = parseInt(numDiceInput.value);
+
+            if (numDice < 1 || numDice > 10) {
+                alert('Please enter between 1 and 10 dice');
+                return;
+            }
+
+            const rolls = [];
+            let sum = 0;
+
+            for (let i = 0; i < numDice; i++) {
+                const roll = Math.floor(Math.random() * diceType) + 1;
+                rolls.push(roll);
+                sum += roll;
+
+                // Update history
+                if (!history[roll]) history[roll] = 0;
+                history[roll]++;
+            }
+
+            // Update stats
+            stats.total += sum;
+            stats.count += numDice;
+            stats.highest = Math.max(stats.highest, sum);
+            stats.lowest = Math.min(stats.lowest, sum);
+
+            displayResults(sum, rolls);
+            updateStats();
+            drawChart(diceType);
+
+            results.style.display = 'block';
+        }
+
+        function displayResults(sum, rolls) {
+            totalDisplay.textContent = sum;
+            totalDisplay.style.animation = 'none';
+            setTimeout(() => totalDisplay.style.animation = 'roll 0.5s ease-out', 10);
+
+            rollsContainer.innerHTML = '';
+            rolls.forEach(roll => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = roll;
+                rollsContainer.appendChild(die);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalRolls').textContent = stats.count;
+            document.getElementById('average').textContent = (stats.total / stats.count).toFixed(2);
+            document.getElementById('highest').textContent = stats.highest;
+            document.getElementById('lowest').textContent = stats.lowest === Infinity ? 0 : stats.lowest;
+        }
+
+        function drawChart(diceType) {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 300;
+
+            const maxValue = Math.max(...Object.values(history), 1);
+            const barWidth = canvas.width / diceType;
+            const padding = 2;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 1; i <= diceType; i++) {
+                const count = history[i] || 0;
+                const barHeight = (count / maxValue) * (canvas.height - 40);
+                const x = (i - 1) * barWidth + padding;
+                const y = canvas.height - barHeight - 30;
+
+                // Draw bar
+                const gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+                gradient.addColorStop(0, '#38bdf8');
+                gradient.addColorStop(1, '#a855f7');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth - padding * 2, barHeight);
+
+                // Draw label
+                ctx.fillStyle = '#f0f0f0';
+                ctx.font = '12px Space Grotesk';
+                ctx.textAlign = 'center';
+                ctx.fillText(i, x + barWidth / 2 - padding, canvas.height - 10);
+
+                // Draw count
+                if (count > 0) {
+                    ctx.fillText(count, x + barWidth / 2 - padding, y - 5);
+                }
+            }
+        }
+
+        function clearHistory() {
+            history = {};
+            stats = { total: 0, count: 0, highest: 0, lowest: Infinity };
+            updateStats();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            results.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
