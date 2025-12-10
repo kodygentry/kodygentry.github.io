@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:075a47ee8e6b2e799b86cd99b91a06ac8d327e573371b0b2665e49bab8b561bd
-size 570
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#1a1f2e"/>
+  <text x="400" y="280" font-family="Arial, sans-serif" font-size="32" fill="#ff6b6b" text-anchor="middle" font-weight="bold">Eternal Burn</text>
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="20" fill="#a855f7" text-anchor="middle">Add your game cover GIF here:</text>
+  <text x="400" y="350" font-family="Arial, sans-serif" font-size="16" fill="#c0c0c0" text-anchor="middle">static/assets/games/eternal-burn.gif</text>
+</svg>

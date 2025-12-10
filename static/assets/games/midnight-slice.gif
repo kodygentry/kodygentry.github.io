@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0306abacdde2534d9515f32ecd3892cf75012e606366c6b04713eef1ff32ad54
-size 579
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#1a1f2e"/>
+  <text x="400" y="280" font-family="Arial, sans-serif" font-size="32" fill="#38bdf8" text-anchor="middle" font-weight="bold">Midnight Slice Demo</text>
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="20" fill="#a855f7" text-anchor="middle">Add your game cover GIF here:</text>
+  <text x="400" y="350" font-family="Arial, sans-serif" font-size="16" fill="#c0c0c0" text-anchor="middle">static/assets/games/midnight-slice.gif</text>
+</svg>
